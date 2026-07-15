@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <!-- Working title — the real name is Sanaya's call. -->
+  <title>Math Climb</title>
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%2339ff14'/><circle cx='36' cy='42' r='6' fill='%230b0f1e'/><circle cx='64' cy='42' r='6' fill='%230b0f1e'/><path d='M32 62 Q50 78 68 62' stroke='%230b0f1e' stroke-width='6' fill='none' stroke-linecap='round'/></svg>" />
+</head>
+<body>
+
+  <!-- ============ TITLE ============ -->
+  <section id="screen-title" class="screen active">
+    <div class="title-wrap">
+      <svg class="hero-circle" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" class="hero-body" />
+        <circle cx="36" cy="42" r="6" fill="#0b0f1e" />
+        <circle cx="64" cy="42" r="6" fill="#0b0f1e" />
+        <path d="M32 62 Q50 78 68 62" stroke="#0b0f1e" stroke-width="6" fill="none" stroke-linecap="round" />
+      </svg>
+      <h1 class="game-title">MATH CLIMB</h1>
+      <p class="tagline">Climb forever. Dodge the neon. Math brings you back to life.</p>
+      <div class="btn-col">
+        <button id="btn-play" class="btn btn-primary">Play</button>
+        <button id="btn-settings" class="btn">Settings</button>
+      </div>
+      <p id="mobile-notice" class="notice" hidden>Heads up: this game is best on a desktop with a keyboard. On touch, press and hold the left / right half of the screen to steer.</p>
+      <p class="credit">A game by Sanaya</p>
+    </div>
+  </section>
+
+  <!-- ============ TOPICS (her spec: four squares) ============ -->
+  <section id="screen-topics" class="screen">
+    <h2 class="screen-heading">Pick your topic</h2>
+    <div id="topic-grid" class="topic-grid"><!-- built from questions.json --></div>
+    <button class="btn btn-back" data-back="title">&larr; Back</button>
+  </section>
+
+  <!-- ============ LEVELS (grade = chosen difficulty, not age) ============ -->
+  <section id="screen-levels" class="screen">
+    <h2 class="screen-heading"><span id="levels-topic-name">Topic</span></h2>
+    <p class="screen-sub">Pick the level that fits your skill — not your age.</p>
+    <div class="btn-col" id="level-buttons">
+      <button class="btn btn-level" data-level="grade6">6th grade <span class="level-tag">easy</span></button>
+      <button class="btn btn-level" data-level="grade7">7th grade <span class="level-tag">medium</span></button>
+      <button class="btn btn-level" data-level="grade8">8th grade <span class="level-tag">hard</span></button>
+    </div>
+    <button class="btn btn-back" data-back="topics">&larr; Back</button>
+  </section>
+
+  <!-- ============ SETTINGS ============ -->
+  <section id="screen-settings" class="screen">
+    <h2 class="screen-heading">Settings</h2>
+    <div class="settings-body">
+      <div class="setting-block">
+        <h3>Your circle</h3>
+        <svg class="preview-circle" viewBox="0 0 100 100" aria-hidden="true">
+          <circle cx="50" cy="50" r="44" class="hero-body" />
+          <circle cx="36" cy="42" r="6" fill="#0b0f1e" />
+          <circle cx="64" cy="42" r="6" fill="#0b0f1e" />
+          <path d="M32 62 Q50 78 68 62" stroke="#0b0f1e" stroke-width="6" fill="none" stroke-linecap="round" />
+        </svg>
+        <div id="swatch-row" class="swatch-row"><!-- swatches from settings.js --></div>
+        <label class="picker-label">or pick any colour:
+          <input type="color" id="color-picker" value="#39ff14" />
+        </label>
+      </div>
+      <div class="setting-block">
+        <h3>Sound</h3>
+        <label class="slider-label"><input type="checkbox" id="music-on" checked /> Background music</label>
+        <label class="slider-label">Music volume
+          <input type="range" id="music-volume" min="0" max="1" step="0.05" />
+        </label>
+        <label class="slider-label">Sound effects
+          <input type="range" id="sfx-volume" min="0" max="1" step="0.05" />
+        </label>
+        <p id="music-missing" class="notice small" hidden>Music file coming soon — sound effects still work.</p>
+      </div>
+    </div>
+    <button class="btn btn-back" data-back="title">&larr; Back</button>
+  </section>
+
+  <!-- ============ GAME ============ -->
+  <section id="screen-game" class="screen">
+    <canvas id="game-canvas"></canvas>
+    <div id="hud">
+      <div id="hud-lives" class="hud-chip" title="Lives">&hearts;&hearts;&hearts;</div>
+      <div id="hud-streak" class="hud-chip" title="5 correct in a row = +1 life">
+        <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
+      </div>
+      <div id="hud-distance" class="hud-chip">0 m</div>
+      <div id="hud-topic" class="hud-chip hud-dim"></div>
+      <button id="btn-pause" class="hud-chip hud-btn" title="Pause (Esc)">&#10074;&#10074;</button>
+    </div>
+
+    <!-- The recovery question. Opening it freezes the world. -->
+    <div id="modal-question" class="modal-backdrop" hidden>
+      <div class="modal">
+        <p class="modal-kicker" id="modal-kicker">Get it right to win your life back!</p>
+        <p id="modal-prompt" class="modal-prompt"></p>
+        <p id="modal-ask" class="modal-ask" hidden></p>
+        <div id="modal-choices" class="modal-choices"></div>
+        <form id="modal-fib-form" hidden>
+          <input id="modal-fib-input" class="fib-input" autocomplete="off" spellcheck="false" placeholder="your answer" />
+          <button type="submit" class="btn btn-primary">Answer</button>
+        </form>
+        <div id="modal-feedback" hidden>
+          <p id="feedback-verdict" class="feedback-verdict"></p>
+          <p id="feedback-explain" class="feedback-explain"></p>
+          <button id="btn-continue" class="btn btn-primary">Keep climbing</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlay-pause" class="modal-backdrop" hidden>
+      <div class="modal">
+        <h2>Paused</h2>
+        <div class="btn-col">
+          <button id="btn-resume" class="btn btn-primary">Resume</button>
+          <button id="btn-quit" class="btn">Back to menu</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GAME OVER (her spec: all black, with stars) ============ -->
+  <section id="screen-gameover" class="screen starfield">
+    <div class="gameover-wrap">
+      <svg class="hero-circle dead" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="44" class="hero-body" />
+        <!-- cross-eyed, as designed -->
+        <path d="M30 36 l12 12 M42 36 l-12 12" stroke="#0b0f1e" stroke-width="5" stroke-linecap="round" />
+        <path d="M58 36 l12 12 M70 36 l-12 12" stroke="#0b0f1e" stroke-width="5" stroke-linecap="round" />
+        <path d="M34 68 Q50 58 66 68" stroke="#0b0f1e" stroke-width="6" fill="none" stroke-linecap="round" />
+      </svg>
+      <h2 class="gameover-title">Game over</h2>
+      <div id="gameover-stats" class="gameover-stats"></div>
+      <div class="btn-col">
+        <button id="btn-again" class="btn btn-primary">Play again</button>
+        <button id="btn-share" class="btn">Save my score card</button>
+        <button id="btn-menu" class="btn">Menu</button>
+      </div>
+    </div>
+  </section>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

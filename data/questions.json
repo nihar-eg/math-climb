@@ -1,0 +1,1277 @@
+{
+  "meta": {
+    "version": 1,
+    "title": "Math Slope — question bank",
+    "note": "Seed bank, Stage 1. Sanaya's authored questions are provenance:'sanaya' (verbatim from her 26+30 Jun WhatsApp). 'mentor-expanded' rows are placeholders to exercise the engine and will be replaced/grown by Nihar's x5 expansion + a human answer-key correctness pass before launch (Stage 4).",
+    "expanded": "2026-07-15",
+    "expansionNote": "Rows with provenance 'sanaya' are Sanaya's originals, preserved verbatim (byte-identical). Each sanaya original has 4 generated variants (ids <original>-v2..-v5, provenance 'mentor-expanded') mirroring its structure, phrasing and validate mode with different numbers. All variant answers are computed by tools (expand-bank.mjs) and independently re-derived from the prompt text by verify-bank.mjs — none are hand-typed."
+  },
+  "topics": {
+    "algebra": {
+      "label": "Algebra",
+      "levels": {
+        "grade6": [
+          {
+            "id": "alg-6-01",
+            "type": "fib",
+            "prompt": "x + 6 = 14.   x = ?",
+            "answer": "8",
+            "validate": "numeric",
+            "explain": "Subtract 6 from both sides: x = 14 − 6 = 8.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "alg-6-01-v2",
+            "type": "fib",
+            "prompt": "x + 4 = 11.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Subtract 4 from both sides: x = 11 − 4 = 7.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-01-v3",
+            "type": "fib",
+            "prompt": "x + 7 = 15.   x = ?",
+            "answer": "8",
+            "validate": "numeric",
+            "explain": "Subtract 7 from both sides: x = 15 − 7 = 8.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-01-v4",
+            "type": "fib",
+            "prompt": "x + 9 = 20.   x = ?",
+            "answer": "11",
+            "validate": "numeric",
+            "explain": "Subtract 9 from both sides: x = 20 − 9 = 11.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-01-v5",
+            "type": "fib",
+            "prompt": "x + 5 = 18.   x = ?",
+            "answer": "13",
+            "validate": "numeric",
+            "explain": "Subtract 5 from both sides: x = 18 − 5 = 13.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-02",
+            "type": "fib",
+            "prompt": "x − 9 = 5.   x = ?",
+            "answer": "14",
+            "validate": "numeric",
+            "explain": "Add 9 to both sides: x = 5 + 9 = 14.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "alg-6-02-v2",
+            "type": "fib",
+            "prompt": "x − 7 = 6.   x = ?",
+            "answer": "13",
+            "validate": "numeric",
+            "explain": "Add 7 to both sides: x = 6 + 7 = 13.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-02-v3",
+            "type": "fib",
+            "prompt": "x − 4 = 12.   x = ?",
+            "answer": "16",
+            "validate": "numeric",
+            "explain": "Add 4 to both sides: x = 12 + 4 = 16.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-02-v4",
+            "type": "fib",
+            "prompt": "x − 8 = 3.   x = ?",
+            "answer": "11",
+            "validate": "numeric",
+            "explain": "Add 8 to both sides: x = 3 + 8 = 11.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-02-v5",
+            "type": "fib",
+            "prompt": "x − 6 = 15.   x = ?",
+            "answer": "21",
+            "validate": "numeric",
+            "explain": "Add 6 to both sides: x = 15 + 6 = 21.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-03",
+            "type": "fib",
+            "prompt": "x + 3 = 10.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Subtract 3 from both sides: x = 10 − 3 = 7.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-04",
+            "type": "mc",
+            "prompt": "Solve: x + 5 = 12.   What is x?",
+            "choices": [
+              "5",
+              "7",
+              "17",
+              "60"
+            ],
+            "answerIndex": 1,
+            "explain": "x = 12 − 5 = 7.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-6-05",
+            "type": "fib",
+            "prompt": "2x = 1.   x = ?",
+            "answer": "1/2",
+            "accept": [
+              "0.5"
+            ],
+            "validate": "fraction",
+            "explain": "Divide both sides by 2: x = 1/2 = 0.5.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade7": [
+          {
+            "id": "alg-7-01",
+            "type": "fib",
+            "prompt": "3x − 5 = 16.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Add 5: 3x = 21. Divide by 3: x = 7.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "alg-7-01-v2",
+            "type": "fib",
+            "prompt": "4x − 7 = 13.   x = ?",
+            "answer": "5",
+            "validate": "numeric",
+            "explain": "Add 7: 4x = 20. Divide by 4: x = 5.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-01-v3",
+            "type": "fib",
+            "prompt": "2x − 9 = 5.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Add 9: 2x = 14. Divide by 2: x = 7.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-01-v4",
+            "type": "fib",
+            "prompt": "5x − 2 = 18.   x = ?",
+            "answer": "4",
+            "validate": "numeric",
+            "explain": "Add 2: 5x = 20. Divide by 5: x = 4.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-01-v5",
+            "type": "fib",
+            "prompt": "3x − 8 = 10.   x = ?",
+            "answer": "6",
+            "validate": "numeric",
+            "explain": "Add 8: 3x = 18. Divide by 3: x = 6.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-02",
+            "type": "fib",
+            "prompt": "x/4 + 3 = 7.   x = ?",
+            "answer": "16",
+            "validate": "numeric",
+            "explain": "Subtract 3: x/4 = 4. Multiply by 4: x = 16.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "alg-7-02-v2",
+            "type": "fib",
+            "prompt": "x/3 + 2 = 8.   x = ?",
+            "answer": "18",
+            "validate": "numeric",
+            "explain": "Subtract 2: x/3 = 6. Multiply by 3: x = 18.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-02-v3",
+            "type": "fib",
+            "prompt": "x/5 + 1 = 4.   x = ?",
+            "answer": "15",
+            "validate": "numeric",
+            "explain": "Subtract 1: x/5 = 3. Multiply by 5: x = 15.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-02-v4",
+            "type": "fib",
+            "prompt": "x/2 + 6 = 10.   x = ?",
+            "answer": "8",
+            "validate": "numeric",
+            "explain": "Subtract 6: x/2 = 4. Multiply by 2: x = 8.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-7-02-v5",
+            "type": "fib",
+            "prompt": "x/6 + 3 = 5.   x = ?",
+            "answer": "12",
+            "validate": "numeric",
+            "explain": "Subtract 3: x/6 = 2. Multiply by 6: x = 12.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade8": [
+          {
+            "id": "alg-8-01",
+            "type": "fib",
+            "prompt": "2x + 7 = x + 15.   x = ?",
+            "answer": "8",
+            "validate": "numeric",
+            "explain": "Subtract x from both sides: x + 7 = 15. Subtract 7: x = 8.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "alg-8-01-v2",
+            "type": "fib",
+            "prompt": "2x + 5 = x + 14.   x = ?",
+            "answer": "9",
+            "validate": "numeric",
+            "explain": "Subtract x from both sides: x + 5 = 14. Subtract 5: x = 9.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-01-v3",
+            "type": "fib",
+            "prompt": "2x + 4 = x + 10.   x = ?",
+            "answer": "6",
+            "validate": "numeric",
+            "explain": "Subtract x from both sides: x + 4 = 10. Subtract 4: x = 6.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-01-v4",
+            "type": "fib",
+            "prompt": "2x + 9 = x + 16.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Subtract x from both sides: x + 9 = 16. Subtract 9: x = 7.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-01-v5",
+            "type": "fib",
+            "prompt": "2x + 6 = x + 20.   x = ?",
+            "answer": "14",
+            "validate": "numeric",
+            "explain": "Subtract x from both sides: x + 6 = 20. Subtract 6: x = 14.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-02",
+            "type": "fib",
+            "prompt": "5x − 3 = 2x + 12.   x = ?",
+            "answer": "5",
+            "validate": "numeric",
+            "explain": "Subtract 2x: 3x − 3 = 12. Add 3: 3x = 15. x = 5.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "alg-8-02-v2",
+            "type": "fib",
+            "prompt": "4x − 5 = 2x + 9.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Subtract 2x: 2x − 5 = 9. Add 5: 2x = 14. x = 7.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-02-v3",
+            "type": "fib",
+            "prompt": "6x − 1 = 3x + 14.   x = ?",
+            "answer": "5",
+            "validate": "numeric",
+            "explain": "Subtract 3x: 3x − 1 = 14. Add 1: 3x = 15. x = 5.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-02-v4",
+            "type": "fib",
+            "prompt": "7x − 2 = 4x + 10.   x = ?",
+            "answer": "4",
+            "validate": "numeric",
+            "explain": "Subtract 4x: 3x − 2 = 10. Add 2: 3x = 12. x = 4.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "alg-8-02-v5",
+            "type": "fib",
+            "prompt": "5x − 8 = 3x + 6.   x = ?",
+            "answer": "7",
+            "validate": "numeric",
+            "explain": "Subtract 3x: 2x − 8 = 6. Add 8: 2x = 14. x = 7.",
+            "provenance": "mentor-expanded"
+          }
+        ]
+      }
+    },
+    "exponents": {
+      "label": "Exponents & Scientific Notation",
+      "levels": {
+        "grade6": [
+          {
+            "id": "exp-6-01",
+            "type": "fib",
+            "prompt": "2^4 = ?",
+            "answer": "16",
+            "validate": "numeric",
+            "explain": "2 × 2 × 2 × 2 = 16.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "exp-6-01-v2",
+            "type": "fib",
+            "prompt": "2^3 = ?",
+            "answer": "8",
+            "validate": "numeric",
+            "explain": "2 × 2 × 2 = 8.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-01-v3",
+            "type": "fib",
+            "prompt": "2^5 = ?",
+            "answer": "32",
+            "validate": "numeric",
+            "explain": "2 × 2 × 2 × 2 × 2 = 32.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-01-v4",
+            "type": "fib",
+            "prompt": "2^6 = ?",
+            "answer": "64",
+            "validate": "numeric",
+            "explain": "2 × 2 × 2 × 2 × 2 × 2 = 64.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-01-v5",
+            "type": "fib",
+            "prompt": "6^2 = ?",
+            "answer": "36",
+            "validate": "numeric",
+            "explain": "6 × 6 = 36.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-02",
+            "type": "fib",
+            "prompt": "3^3 = ?",
+            "answer": "27",
+            "validate": "numeric",
+            "explain": "3 × 3 × 3 = 27.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "exp-6-02-v2",
+            "type": "fib",
+            "prompt": "3^2 = ?",
+            "answer": "9",
+            "validate": "numeric",
+            "explain": "3 × 3 = 9.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-02-v3",
+            "type": "fib",
+            "prompt": "4^3 = ?",
+            "answer": "64",
+            "validate": "numeric",
+            "explain": "4 × 4 × 4 = 64.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-02-v4",
+            "type": "fib",
+            "prompt": "5^2 = ?",
+            "answer": "25",
+            "validate": "numeric",
+            "explain": "5 × 5 = 25.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-6-02-v5",
+            "type": "fib",
+            "prompt": "3^4 = ?",
+            "answer": "81",
+            "validate": "numeric",
+            "explain": "3 × 3 × 3 × 3 = 81.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade7": [
+          {
+            "id": "exp-7-01",
+            "type": "fib",
+            "prompt": "6^3 = ?",
+            "answer": "216",
+            "validate": "numeric",
+            "explain": "6 × 6 × 6 = 216.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "exp-7-01-v2",
+            "type": "fib",
+            "prompt": "5^3 = ?",
+            "answer": "125",
+            "validate": "numeric",
+            "explain": "5 × 5 × 5 = 125.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-01-v3",
+            "type": "fib",
+            "prompt": "4^4 = ?",
+            "answer": "256",
+            "validate": "numeric",
+            "explain": "4 × 4 × 4 × 4 = 256.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-01-v4",
+            "type": "fib",
+            "prompt": "7^3 = ?",
+            "answer": "343",
+            "validate": "numeric",
+            "explain": "7 × 7 × 7 = 343.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-01-v5",
+            "type": "fib",
+            "prompt": "12^2 = ?",
+            "answer": "144",
+            "validate": "numeric",
+            "explain": "12 × 12 = 144.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-02",
+            "type": "fib",
+            "prompt": "10^4 = ?",
+            "answer": "10000",
+            "accept": [
+              "10,000"
+            ],
+            "validate": "numeric",
+            "explain": "10 × 10 × 10 × 10 = 10,000.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "exp-7-02-v2",
+            "type": "fib",
+            "prompt": "10^3 = ?",
+            "answer": "1000",
+            "accept": [
+              "1,000"
+            ],
+            "validate": "numeric",
+            "explain": "10 × 10 × 10 = 1,000.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-02-v3",
+            "type": "fib",
+            "prompt": "10^5 = ?",
+            "answer": "100000",
+            "accept": [
+              "100,000"
+            ],
+            "validate": "numeric",
+            "explain": "10 × 10 × 10 × 10 × 10 = 100,000.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-02-v4",
+            "type": "fib",
+            "prompt": "10^2 = ?",
+            "answer": "100",
+            "validate": "numeric",
+            "explain": "10 × 10 = 100.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-7-02-v5",
+            "type": "fib",
+            "prompt": "100^2 = ?",
+            "answer": "10000",
+            "accept": [
+              "10,000"
+            ],
+            "validate": "numeric",
+            "explain": "100 × 100 = 10,000.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade8": [
+          {
+            "id": "exp-8-01",
+            "type": "fib",
+            "prompt": "5^8 ÷ 5^2 = ?",
+            "answer": "15625",
+            "validate": "numeric",
+            "explain": "Subtract the exponents: 5^(8−2) = 5^6 = 15625.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "exp-8-01-v2",
+            "type": "fib",
+            "prompt": "3^7 ÷ 3^2 = ?",
+            "answer": "243",
+            "validate": "numeric",
+            "explain": "Subtract the exponents: 3^(7−2) = 3^5 = 243.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-01-v3",
+            "type": "fib",
+            "prompt": "2^10 ÷ 2^3 = ?",
+            "answer": "128",
+            "validate": "numeric",
+            "explain": "Subtract the exponents: 2^(10−3) = 2^7 = 128.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-01-v4",
+            "type": "fib",
+            "prompt": "6^8 ÷ 6^3 = ?",
+            "answer": "7776",
+            "validate": "numeric",
+            "explain": "Subtract the exponents: 6^(8−3) = 6^5 = 7776.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-01-v5",
+            "type": "fib",
+            "prompt": "4^9 ÷ 4^3 = ?",
+            "answer": "4096",
+            "validate": "numeric",
+            "explain": "Subtract the exponents: 4^(9−3) = 4^6 = 4096.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-02",
+            "type": "fib",
+            "prompt": "(2^3)^2 = ?",
+            "answer": "64",
+            "validate": "numeric",
+            "explain": "Multiply the exponents: 2^(3×2) = 2^6 = 64.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "exp-8-02-v2",
+            "type": "fib",
+            "prompt": "(3^2)^2 = ?",
+            "answer": "81",
+            "validate": "numeric",
+            "explain": "Multiply the exponents: 3^(2×2) = 3^4 = 81.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-02-v3",
+            "type": "fib",
+            "prompt": "(2^2)^3 = ?",
+            "answer": "64",
+            "validate": "numeric",
+            "explain": "Multiply the exponents: 2^(2×3) = 2^6 = 64.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-02-v4",
+            "type": "fib",
+            "prompt": "(5^2)^2 = ?",
+            "answer": "625",
+            "validate": "numeric",
+            "explain": "Multiply the exponents: 5^(2×2) = 5^4 = 625.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "exp-8-02-v5",
+            "type": "fib",
+            "prompt": "(3^2)^3 = ?",
+            "answer": "729",
+            "validate": "numeric",
+            "explain": "Multiply the exponents: 3^(2×3) = 3^6 = 729.",
+            "provenance": "mentor-expanded"
+          }
+        ]
+      }
+    },
+    "ratios": {
+      "label": "Ratios & Proportions",
+      "levels": {
+        "grade6": [
+          {
+            "id": "rat-6-01",
+            "type": "fib",
+            "prompt": "If 3 apples cost $6, how much do 6 apples cost? (in $)",
+            "answer": "12",
+            "accept": [
+              "$12"
+            ],
+            "validate": "numeric",
+            "explain": "6 apples is double 3 apples, so double the cost: $12.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "rat-6-01-v2",
+            "type": "fib",
+            "prompt": "If 2 bananas cost $8, how much do 4 bananas cost? (in $)",
+            "answer": "16",
+            "accept": [
+              "$16"
+            ],
+            "validate": "numeric",
+            "explain": "4 bananas is double 2 bananas, so double the cost: $16.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-01-v3",
+            "type": "fib",
+            "prompt": "If 5 oranges cost $10, how much do 10 oranges cost? (in $)",
+            "answer": "20",
+            "accept": [
+              "$20"
+            ],
+            "validate": "numeric",
+            "explain": "10 oranges is double 5 oranges, so double the cost: $20.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-01-v4",
+            "type": "fib",
+            "prompt": "If 3 mangoes cost $9, how much do 6 mangoes cost? (in $)",
+            "answer": "18",
+            "accept": [
+              "$18"
+            ],
+            "validate": "numeric",
+            "explain": "6 mangoes is double 3 mangoes, so double the cost: $18.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-01-v5",
+            "type": "fib",
+            "prompt": "If 4 pears cost $12, how much do 8 pears cost? (in $)",
+            "answer": "24",
+            "accept": [
+              "$24"
+            ],
+            "validate": "numeric",
+            "explain": "8 pears is double 4 pears, so double the cost: $24.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-02",
+            "type": "fib",
+            "prompt": "If 2 pencils cost $4, how much do 5 pencils cost? (in $)",
+            "answer": "10",
+            "accept": [
+              "$10"
+            ],
+            "validate": "numeric",
+            "explain": "Each pencil is $4 ÷ 2 = $2. Five pencils: 5 × $2 = $10.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "rat-6-02-v2",
+            "type": "fib",
+            "prompt": "If 3 pens cost $6, how much do 7 pens cost? (in $)",
+            "answer": "14",
+            "accept": [
+              "$14"
+            ],
+            "validate": "numeric",
+            "explain": "Each pen is $6 ÷ 3 = $2. Seven pens: 7 × $2 = $14.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-02-v3",
+            "type": "fib",
+            "prompt": "If 4 erasers cost $12, how much do 7 erasers cost? (in $)",
+            "answer": "21",
+            "accept": [
+              "$21"
+            ],
+            "validate": "numeric",
+            "explain": "Each eraser is $12 ÷ 4 = $3. Seven erasers: 7 × $3 = $21.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-02-v4",
+            "type": "fib",
+            "prompt": "If 2 notebooks cost $6, how much do 5 notebooks cost? (in $)",
+            "answer": "15",
+            "accept": [
+              "$15"
+            ],
+            "validate": "numeric",
+            "explain": "Each notebook is $6 ÷ 2 = $3. Five notebooks: 5 × $3 = $15.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-6-02-v5",
+            "type": "fib",
+            "prompt": "If 3 markers cost $12, how much do 5 markers cost? (in $)",
+            "answer": "20",
+            "accept": [
+              "$20"
+            ],
+            "validate": "numeric",
+            "explain": "Each marker is $12 ÷ 3 = $4. Five markers: 5 × $4 = $20.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade7": [
+          {
+            "id": "rat-7-01",
+            "type": "fib",
+            "prompt": "A car goes 120 miles in 2 hours. What is its speed? (in mph)",
+            "answer": "60",
+            "validate": "numeric",
+            "explain": "Speed = distance ÷ time = 120 ÷ 2 = 60 mph.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "rat-7-01-v2",
+            "type": "fib",
+            "prompt": "A train goes 150 miles in 3 hours. What is its speed? (in mph)",
+            "answer": "50",
+            "validate": "numeric",
+            "explain": "Speed = distance ÷ time = 150 ÷ 3 = 50 mph.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-01-v3",
+            "type": "fib",
+            "prompt": "A bus goes 240 miles in 4 hours. What is its speed? (in mph)",
+            "answer": "60",
+            "validate": "numeric",
+            "explain": "Speed = distance ÷ time = 240 ÷ 4 = 60 mph.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-01-v4",
+            "type": "fib",
+            "prompt": "A car goes 180 miles in 3 hours. What is its speed? (in mph)",
+            "answer": "60",
+            "validate": "numeric",
+            "explain": "Speed = distance ÷ time = 180 ÷ 3 = 60 mph.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-01-v5",
+            "type": "fib",
+            "prompt": "A car goes 100 miles in 2 hours. What is its speed? (in mph)",
+            "answer": "50",
+            "validate": "numeric",
+            "explain": "Speed = distance ÷ time = 100 ÷ 2 = 50 mph.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-02",
+            "type": "fib",
+            "prompt": "If 8 items cost $24, what is the unit rate? (in $ per item)",
+            "answer": "3",
+            "accept": [
+              "$3"
+            ],
+            "validate": "numeric",
+            "explain": "24 ÷ 8 = $3 per item.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "rat-7-02-v2",
+            "type": "fib",
+            "prompt": "If 6 items cost $18, what is the unit rate? (in $ per item)",
+            "answer": "3",
+            "accept": [
+              "$3"
+            ],
+            "validate": "numeric",
+            "explain": "18 ÷ 6 = $3 per item.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-02-v3",
+            "type": "fib",
+            "prompt": "If 5 items cost $20, what is the unit rate? (in $ per item)",
+            "answer": "4",
+            "accept": [
+              "$4"
+            ],
+            "validate": "numeric",
+            "explain": "20 ÷ 5 = $4 per item.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-02-v4",
+            "type": "fib",
+            "prompt": "If 4 items cost $28, what is the unit rate? (in $ per item)",
+            "answer": "7",
+            "accept": [
+              "$7"
+            ],
+            "validate": "numeric",
+            "explain": "28 ÷ 4 = $7 per item.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-7-02-v5",
+            "type": "fib",
+            "prompt": "If 9 items cost $36, what is the unit rate? (in $ per item)",
+            "answer": "4",
+            "accept": [
+              "$4"
+            ],
+            "validate": "numeric",
+            "explain": "36 ÷ 9 = $4 per item.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade8": [
+          {
+            "id": "rat-8-01",
+            "type": "fib",
+            "prompt": "Solve the proportion: 4/x = 12/9.   x = ?",
+            "answer": "3",
+            "validate": "numeric",
+            "explain": "Cross-multiply: 4 × 9 = 12 × x → 36 = 12x → x = 3.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "rat-8-01-v2",
+            "type": "fib",
+            "prompt": "Solve the proportion: 6/x = 18/12.   x = ?",
+            "answer": "4",
+            "validate": "numeric",
+            "explain": "Cross-multiply: 6 × 12 = 18 × x → 72 = 18x → x = 4.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-01-v3",
+            "type": "fib",
+            "prompt": "Solve the proportion: 5/x = 15/6.   x = ?",
+            "answer": "2",
+            "validate": "numeric",
+            "explain": "Cross-multiply: 5 × 6 = 15 × x → 30 = 15x → x = 2.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-01-v4",
+            "type": "fib",
+            "prompt": "Solve the proportion: 8/x = 24/9.   x = ?",
+            "answer": "3",
+            "validate": "numeric",
+            "explain": "Cross-multiply: 8 × 9 = 24 × x → 72 = 24x → x = 3.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-01-v5",
+            "type": "fib",
+            "prompt": "Solve the proportion: 10/x = 20/8.   x = ?",
+            "answer": "4",
+            "validate": "numeric",
+            "explain": "Cross-multiply: 10 × 8 = 20 × x → 80 = 20x → x = 4.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-02",
+            "type": "fib",
+            "prompt": "Solve the proportion: x/5 = 15/3.   x = ?",
+            "answer": "25",
+            "validate": "numeric",
+            "explain": "15/3 = 5, so x/5 = 5 → x = 25.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "rat-8-02-v2",
+            "type": "fib",
+            "prompt": "Solve the proportion: x/4 = 12/3.   x = ?",
+            "answer": "16",
+            "validate": "numeric",
+            "explain": "12/3 = 4, so x/4 = 4 → x = 16.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-02-v3",
+            "type": "fib",
+            "prompt": "Solve the proportion: x/6 = 20/4.   x = ?",
+            "answer": "30",
+            "validate": "numeric",
+            "explain": "20/4 = 5, so x/6 = 5 → x = 30.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-02-v4",
+            "type": "fib",
+            "prompt": "Solve the proportion: x/3 = 28/7.   x = ?",
+            "answer": "12",
+            "validate": "numeric",
+            "explain": "28/7 = 4, so x/3 = 4 → x = 12.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "rat-8-02-v5",
+            "type": "fib",
+            "prompt": "Solve the proportion: x/7 = 18/6.   x = ?",
+            "answer": "21",
+            "validate": "numeric",
+            "explain": "18/6 = 3, so x/7 = 3 → x = 21.",
+            "provenance": "mentor-expanded"
+          }
+        ]
+      }
+    },
+    "coordinates": {
+      "label": "Coordinate Geometry",
+      "levels": {
+        "grade6": [
+          {
+            "id": "coord-6-01",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (2, 3) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 0,
+            "explain": "Both x and y are positive → Quadrant I.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "coord-6-01-v2",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (−5, 1) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 1,
+            "explain": "x is negative, y is positive → Quadrant II.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-01-v3",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (−3, 7) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 1,
+            "explain": "x is negative, y is positive → Quadrant II.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-01-v4",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (4, 2) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 0,
+            "explain": "Both x and y are positive → Quadrant I.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-01-v5",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (6, 4) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 0,
+            "explain": "Both x and y are positive → Quadrant I.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-02",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (−4, 5) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 1,
+            "explain": "x is negative, y is positive → Quadrant II.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "coord-6-02-v2",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (2, −9) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 3,
+            "explain": "x is positive, y is negative → Quadrant IV.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-02-v3",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (7, −3) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 3,
+            "explain": "x is positive, y is negative → Quadrant IV.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-02-v4",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (1, 6) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 0,
+            "explain": "Both x and y are positive → Quadrant I.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-6-02-v5",
+            "type": "mc",
+            "prompt": "Which quadrant is the point (−8, −2) in?",
+            "choices": [
+              "I",
+              "II",
+              "III",
+              "IV"
+            ],
+            "answerIndex": 2,
+            "explain": "Both x and y are negative → Quadrant III.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade7": [
+          {
+            "id": "coord-7-01",
+            "type": "fib",
+            "prompt": "Find the slope between (1, 2) and (3, 6).",
+            "answer": "2",
+            "validate": "numeric",
+            "explain": "Slope = (6 − 2) / (3 − 1) = 4/2 = 2.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "coord-7-01-v2",
+            "type": "fib",
+            "prompt": "Find the slope between (1, 5) and (3, 9).",
+            "answer": "2",
+            "validate": "numeric",
+            "explain": "Slope = (9 − 5) / (3 − 1) = 4/2 = 2.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-01-v3",
+            "type": "fib",
+            "prompt": "Find the slope between (2, 2) and (5, 11).",
+            "answer": "3",
+            "validate": "numeric",
+            "explain": "Slope = (11 − 2) / (5 − 2) = 9/3 = 3.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-01-v4",
+            "type": "fib",
+            "prompt": "Find the slope between (0, 4) and (3, 10).",
+            "answer": "2",
+            "validate": "numeric",
+            "explain": "Slope = (10 − 4) / (3 − 0) = 6/3 = 2.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-01-v5",
+            "type": "fib",
+            "prompt": "Find the slope between (1, 1) and (4, 13).",
+            "answer": "4",
+            "validate": "numeric",
+            "explain": "Slope = (13 − 1) / (4 − 1) = 12/3 = 4.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-02",
+            "type": "fib",
+            "prompt": "Find the slope between (2, 1) and (6, 5).",
+            "answer": "1",
+            "validate": "numeric",
+            "explain": "Slope = (5 − 1) / (6 − 2) = 4/4 = 1.",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "coord-7-02-v2",
+            "type": "fib",
+            "prompt": "Find the slope between (3, 2) and (5, 8).",
+            "answer": "3",
+            "validate": "numeric",
+            "explain": "Slope = (8 − 2) / (5 − 3) = 6/2 = 3.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-02-v3",
+            "type": "fib",
+            "prompt": "Find the slope between (1, 3) and (5, 7).",
+            "answer": "1",
+            "validate": "numeric",
+            "explain": "Slope = (7 − 3) / (5 − 1) = 4/4 = 1.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-02-v4",
+            "type": "fib",
+            "prompt": "Find the slope between (2, 5) and (4, 11).",
+            "answer": "3",
+            "validate": "numeric",
+            "explain": "Slope = (11 − 5) / (4 − 2) = 6/2 = 3.",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-7-02-v5",
+            "type": "fib",
+            "prompt": "Find the slope between (0, 2) and (4, 6).",
+            "answer": "1",
+            "validate": "numeric",
+            "explain": "Slope = (6 − 2) / (4 − 0) = 4/4 = 1.",
+            "provenance": "mentor-expanded"
+          }
+        ],
+        "grade8": [
+          {
+            "id": "coord-8-01",
+            "type": "fib",
+            "prompt": "Start at (2, 3). Go left 4 and up 1. Where do you land? Write as (x, y).",
+            "answer": "(-2, 4)",
+            "validate": "coordinate",
+            "explain": "Left 4: 2 − 4 = −2. Up 1: 3 + 1 = 4 → (−2, 4).",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "coord-8-01-v2",
+            "type": "fib",
+            "prompt": "Start at (5, 2). Go left 3 and up 4. Where do you land? Write as (x, y).",
+            "answer": "(2, 6)",
+            "validate": "coordinate",
+            "explain": "Left 3: 5 − 3 = 2. Up 4: 2 + 4 = 6 → (2, 6).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-01-v3",
+            "type": "fib",
+            "prompt": "Start at (1, 4). Go left 5 and down 2. Where do you land? Write as (x, y).",
+            "answer": "(-4, 2)",
+            "validate": "coordinate",
+            "explain": "Left 5: 1 − 5 = −4. Down 2: 4 − 2 = 2 → (−4, 2).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-01-v4",
+            "type": "fib",
+            "prompt": "Start at (4, 1). Go right 2 and up 5. Where do you land? Write as (x, y).",
+            "answer": "(6, 6)",
+            "validate": "coordinate",
+            "explain": "Right 2: 4 + 2 = 6. Up 5: 1 + 5 = 6 → (6, 6).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-01-v5",
+            "type": "fib",
+            "prompt": "Start at (2, 7). Go left 6 and down 3. Where do you land? Write as (x, y).",
+            "answer": "(-4, 4)",
+            "validate": "coordinate",
+            "explain": "Left 6: 2 − 6 = −4. Down 3: 7 − 3 = 4 → (−4, 4).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-02",
+            "type": "fib",
+            "prompt": "Start at (−1, 5). Go right 3 and down 2. Where do you land? Write as (x, y).",
+            "answer": "(2, 3)",
+            "validate": "coordinate",
+            "explain": "Right 3: −1 + 3 = 2. Down 2: 5 − 2 = 3 → (2, 3).",
+            "provenance": "sanaya"
+          },
+          {
+            "id": "coord-8-02-v2",
+            "type": "fib",
+            "prompt": "Start at (−3, 2). Go right 4 and down 1. Where do you land? Write as (x, y).",
+            "answer": "(1, 1)",
+            "validate": "coordinate",
+            "explain": "Right 4: −3 + 4 = 1. Down 1: 2 − 1 = 1 → (1, 1).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-02-v3",
+            "type": "fib",
+            "prompt": "Start at (−2, 6). Go right 6 and down 4. Where do you land? Write as (x, y).",
+            "answer": "(4, 2)",
+            "validate": "coordinate",
+            "explain": "Right 6: −2 + 6 = 4. Down 4: 6 − 4 = 2 → (4, 2).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-02-v4",
+            "type": "fib",
+            "prompt": "Start at (−5, 1). Go right 3 and up 4. Where do you land? Write as (x, y).",
+            "answer": "(-2, 5)",
+            "validate": "coordinate",
+            "explain": "Right 3: −5 + 3 = −2. Up 4: 1 + 4 = 5 → (−2, 5).",
+            "provenance": "mentor-expanded"
+          },
+          {
+            "id": "coord-8-02-v5",
+            "type": "fib",
+            "prompt": "Start at (−4, 7). Go right 2 and down 5. Where do you land? Write as (x, y).",
+            "answer": "(-2, 2)",
+            "validate": "coordinate",
+            "explain": "Right 2: −4 + 2 = −2. Down 5: 7 − 5 = 2 → (−2, 2).",
+            "provenance": "mentor-expanded"
+          }
+        ]
+      }
+    }
+  }
+}
