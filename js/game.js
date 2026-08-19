@@ -6,6 +6,7 @@
 
 import { newRun, applyCollision, applyAnswer, STREAK_TARGET } from "./rules.js";
 import { checkAnswer } from "./validate.js";
+import { getTheme } from "./themes.js";
 
 // The dials. Everything about how the game FEELS is tuned here, in one place.
 export const TUNING = {
@@ -22,7 +23,9 @@ export const TUNING = {
   grace: 1.4,         // seconds of safety after a question (no instant re-hit)
 };
 
-const NEONS = ["#00e5ff", "#ff2d95", "#ffd400", "#b56bff", "#39ff14"];
+// Filled in by setTheme() below — see themes.js. Defaults keep the game
+// drawable even if a theme is never pushed in.
+const FALLBACK = getTheme();
 
 export function createGame({ canvas, hooks }) {
   // hooks: { onCollision(q), onHud(run, meters), onGameOver(run, meters), pickQuestion() }
@@ -41,8 +44,15 @@ export function createGame({ canvas, hooks }) {
   let stars = [];       // parallax background
   let spawnClock = 0;
   let keys = { left: false, right: false };
-  let circleColor = "#39ff14";
+  let circleColor = FALLBACK.defaultCircle;
   let dizzyLeft = 0;    // little cross-eyed moment right after a hit
+
+  // ---- the look, pushed in from settings (themes.js) ----
+  let palette = FALLBACK.obstacles;      // bar colours to pick from
+  let ink = FALLBACK.tokens["--ink"];    // the face drawn on the circle
+  let glow = FALLBACK.glow;              // bloom reads on dark, vanishes on light
+  let barStroke = FALLBACK.obstacleStroke;
+  let starColor = FALLBACK.star;         // white on the dark themes, a soft tint on the pale ones
 
   // ---- sizing (crisp on retina; clamp DPR so old laptops don't melt) ----
   function resize() {
@@ -78,7 +88,7 @@ export function createGame({ canvas, hooks }) {
 
   // ---- obstacles ----
   function spawnRow() {
-    const color = NEONS[Math.floor(Math.random() * NEONS.length)];
+    const color = palette[Math.floor(Math.random() * palette.length)];
     const h = 22 + Math.random() * 14;
     const y = -h - 10;
     // difficulty tier: early = single blocks; later = rows with a gap to thread
@@ -109,12 +119,15 @@ export function createGame({ canvas, hooks }) {
   // ---- the loop ----
   let last = performance.now();
   function frame(now) {
+    // Re-arm FIRST. update() calls out to the UI hooks, and a throw in any of
+    // them used to skip the re-arm at the bottom and freeze the canvas forever
+    // with no message — turning a small UI bug into a dead game.
+    requestAnimationFrame(frame);
     // clamp dt so a backgrounded tab doesn't fast-forward the world on return
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
     if (state === "running") update(dt);
     draw();
-    requestAnimationFrame(frame);
   }
 
   function update(dt) {
@@ -174,7 +187,7 @@ export function createGame({ canvas, hooks }) {
     ctx.clearRect(0, 0, W, H);
 
     // parallax stars drift DOWN as you climb up
-    ctx.fillStyle = "#ffffff";
+    ctx.fillStyle = starColor;
     for (const s of stars) {
       const y = (s.y + distance * s.depth) % H;
       ctx.globalAlpha = 0.25 + s.depth * 0.9;
@@ -189,13 +202,23 @@ export function createGame({ canvas, hooks }) {
     ctx.save();
     ctx.translate(sx, sy);
 
-    // neon obstacles (glow via shadowBlur)
+    // the bars. On dark themes they bloom; on pale themes a bloom is invisible,
+    // so they get a crisp outline instead — the bars must stay easy to see, or
+    // the game gets unfair rather than just prettier.
     for (const o of obstacles) {
-      ctx.shadowColor = o.color;
-      ctx.shadowBlur = 18;
+      if (glow) {
+        ctx.shadowColor = o.color;
+        ctx.shadowBlur = 18;
+      }
       ctx.fillStyle = o.color;
       roundRect(ctx, o.x, o.y, o.w, o.h, 6);
       ctx.fill();
+      if (barStroke) {
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = barStroke;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
     }
     ctx.shadowBlur = 0;
 
@@ -207,17 +230,26 @@ export function createGame({ canvas, hooks }) {
     const r = TUNING.ballR;
     const blink = graceLeft > 0 && Math.floor(graceLeft * 10) % 2 === 0; // safety blink
     ctx.globalAlpha = blink ? 0.45 : 1;
-    ctx.shadowColor = circleColor;
-    ctx.shadowBlur = 22;
+    if (glow) {
+      ctx.shadowColor = circleColor;
+      ctx.shadowBlur = 22;
+    }
     ctx.fillStyle = circleColor;
     ctx.beginPath();
     ctx.arc(ball.x, yBall, r, 0, Math.PI * 2);
     ctx.fill();
     ctx.shadowBlur = 0;
+    // On a pale theme the glow does nothing, and a soft circle on a soft
+    // background is hard to track — so it gets the same outline the bars do.
+    if (!glow) {
+      ctx.strokeStyle = ink;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    }
 
     // the face — cross-eyed for a moment after a hit (her design)
-    ctx.strokeStyle = "#0b0f1e";
-    ctx.fillStyle = "#0b0f1e";
+    ctx.strokeStyle = ink;
+    ctx.fillStyle = ink;
     ctx.lineWidth = 2.4;
     ctx.lineCap = "round";
     const ex = r * 0.42, ey = yBall - r * 0.22, er = r * 0.16;
@@ -297,6 +329,18 @@ export function createGame({ canvas, hooks }) {
     stop() { state = "idle"; },
     setKeys(k) { keys = { ...keys, ...k }; },
     setCircleColor(c) { circleColor = c; },
+    // Repaint the world for a theme. Bars already on screen keep their old
+    // colours until they scroll off — recolouring mid-fall would look like a
+    // glitch, and the player can only change theme from the menu anyway.
+    setTheme(id) {
+      const t = getTheme(id);
+      palette = t.obstacles;
+      ink = t.tokens["--ink"];
+      glow = t.glow;
+      barStroke = t.obstacleStroke;
+      starColor = t.star;
+      return t;
+    },
     getState: () => state,
     getRun: () => run,
     meters,

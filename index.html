@@ -6,119 +6,138 @@
   <!-- Working title — the real name is Sanaya's call. -->
   <title>Math Climb</title>
   <link rel="stylesheet" href="css/style.css" />
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%2339ff14'/><circle cx='36' cy='42' r='6' fill='%230b0f1e'/><circle cx='64' cy='42' r='6' fill='%230b0f1e'/><path d='M32 62 Q50 78 68 62' stroke='%230b0f1e' stroke-width='6' fill='none' stroke-linecap='round'/></svg>" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='44' fill='%23f36bab'/><circle cx='36' cy='42' r='6' fill='%2335283f'/><circle cx='64' cy='42' r='6' fill='%2335283f'/><path d='M32 62 Q50 78 68 62' stroke='%2335283f' stroke-width='6' fill='none' stroke-linecap='round'/></svg>" />
 </head>
 <body>
+
+  <!-- Every visible word comes from js/copy.js: an element tagged with a
+       copy attribute gets its text from the matching key there, so the wording
+       can be rewritten in one file without touching any markup. -->
 
   <!-- ============ TITLE ============ -->
   <section id="screen-title" class="screen active">
     <div class="title-wrap">
       <svg class="hero-circle" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="44" class="hero-body" />
-        <circle cx="36" cy="42" r="6" fill="#0b0f1e" />
-        <circle cx="64" cy="42" r="6" fill="#0b0f1e" />
-        <path d="M32 62 Q50 78 68 62" stroke="#0b0f1e" stroke-width="6" fill="none" stroke-linecap="round" />
+        <circle cx="36" cy="42" r="6" class="face-fill" />
+        <circle cx="64" cy="42" r="6" class="face-fill" />
+        <path d="M32 62 Q50 78 68 62" class="face-stroke" stroke-width="6" stroke-linecap="round" />
       </svg>
-      <h1 class="game-title">MATH CLIMB</h1>
-      <p class="tagline">Climb forever. Dodge the neon. Math brings you back to life.</p>
+      <h1 class="game-title" data-copy="gameTitle">MATH CLIMB</h1>
+      <p class="tagline" data-copy="tagline"></p>
       <div class="btn-col">
-        <button id="btn-play" class="btn btn-primary">Play</button>
-        <button id="btn-settings" class="btn">Settings</button>
+        <button id="btn-play" class="btn btn-primary" data-copy="btnPlay"></button>
+        <button id="btn-howto" class="btn" data-copy="btnHowTo"></button>
+        <button id="btn-settings" class="btn" data-copy="btnSettings"></button>
       </div>
-      <p id="mobile-notice" class="notice" hidden>Heads up: this game is best on a desktop with a keyboard. On touch, press and hold the left / right half of the screen to steer.</p>
-      <p class="credit">A game by Sanaya</p>
+      <p id="mobile-notice" class="notice" data-copy="mobileNotice" hidden></p>
+      <p class="credit" data-copy="credit"></p>
+    </div>
+
+    <!-- How to play. Opens on its own the first time (Sanaya's review note:
+         "it took me a few tries to see how the game works"), and from the
+         button after that. -->
+    <div id="overlay-howto" class="modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="howto-title" hidden>
+      <div class="howto-card">
+        <h2 id="howto-title" data-copy="howToTitle"></h2>
+        <ol id="howto-steps" class="howto-steps"><!-- built from copy.js --></ol>
+        <button id="btn-howto-close" class="btn btn-primary" data-copy="howToGotIt"></button>
+      </div>
     </div>
   </section>
 
   <!-- ============ TOPICS (her spec: four squares) ============ -->
   <section id="screen-topics" class="screen">
-    <h2 class="screen-heading">Pick your topic</h2>
+    <h2 class="screen-heading" data-copy="topicsHeading"></h2>
     <div id="topic-grid" class="topic-grid"><!-- built from questions.json --></div>
-    <button class="btn btn-back" data-back="title">&larr; Back</button>
+    <button class="btn btn-back" data-back="title" data-copy="btnBack"></button>
   </section>
 
   <!-- ============ LEVELS (grade = chosen difficulty, not age) ============ -->
   <section id="screen-levels" class="screen">
     <h2 class="screen-heading"><span id="levels-topic-name">Topic</span></h2>
-    <p class="screen-sub">Pick the level that fits your skill — not your age.</p>
-    <div class="btn-col" id="level-buttons">
-      <button class="btn btn-level" data-level="grade6">6th grade <span class="level-tag">easy</span></button>
-      <button class="btn btn-level" data-level="grade7">7th grade <span class="level-tag">medium</span></button>
-      <button class="btn btn-level" data-level="grade8">8th grade <span class="level-tag">hard</span></button>
-    </div>
-    <button class="btn btn-back" data-back="topics">&larr; Back</button>
+    <p class="screen-sub" data-copy="levelsSub"></p>
+    <div class="btn-col" id="level-buttons"><!-- built from copy.js --></div>
+    <button class="btn btn-back" data-back="topics" data-copy="btnBack"></button>
   </section>
 
   <!-- ============ SETTINGS ============ -->
   <section id="screen-settings" class="screen">
-    <h2 class="screen-heading">Settings</h2>
+    <h2 class="screen-heading" data-copy="settingsHeading"></h2>
     <div class="settings-body">
       <div class="setting-block">
-        <h3>Your circle</h3>
+        <h3 data-copy="settingsTheme"></h3>
+        <div id="theme-row" class="theme-row"><!-- built from themes.js --></div>
+      </div>
+      <div class="setting-block">
+        <h3 data-copy="settingsCircle"></h3>
         <svg class="preview-circle" viewBox="0 0 100 100" aria-hidden="true">
           <circle cx="50" cy="50" r="44" class="hero-body" />
-          <circle cx="36" cy="42" r="6" fill="#0b0f1e" />
-          <circle cx="64" cy="42" r="6" fill="#0b0f1e" />
-          <path d="M32 62 Q50 78 68 62" stroke="#0b0f1e" stroke-width="6" fill="none" stroke-linecap="round" />
+          <circle cx="36" cy="42" r="6" class="face-fill" />
+          <circle cx="64" cy="42" r="6" class="face-fill" />
+          <path d="M32 62 Q50 78 68 62" class="face-stroke" stroke-width="6" stroke-linecap="round" />
         </svg>
-        <div id="swatch-row" class="swatch-row"><!-- swatches from settings.js --></div>
-        <label class="picker-label">or pick any colour:
-          <input type="color" id="color-picker" value="#39ff14" />
+        <div id="swatch-row" class="swatch-row"><!-- swatches from themes.js --></div>
+        <label class="picker-label"><span data-copy="settingsPickAny"></span>
+          <input type="color" id="color-picker" value="#f36bab" />
         </label>
       </div>
       <div class="setting-block">
-        <h3>Sound</h3>
-        <label class="slider-label"><input type="checkbox" id="music-on" checked /> Background music</label>
-        <label class="slider-label">Music volume
+        <h3 data-copy="settingsSound"></h3>
+        <label class="slider-label"><input type="checkbox" id="music-on" checked /> <span data-copy="settingsMusicOn"></span></label>
+        <label class="slider-label"><span data-copy="settingsMusicVol"></span>
           <input type="range" id="music-volume" min="0" max="1" step="0.05" />
         </label>
-        <label class="slider-label">Sound effects
+        <label class="slider-label"><span data-copy="settingsSfxVol"></span>
           <input type="range" id="sfx-volume" min="0" max="1" step="0.05" />
         </label>
-        <p id="music-missing" class="notice small" hidden>Music file coming soon — sound effects still work.</p>
+        <p id="music-missing" class="notice small" data-copy="musicMissing" hidden></p>
       </div>
     </div>
-    <button class="btn btn-back" data-back="title">&larr; Back</button>
+    <button class="btn btn-back" data-back="title" data-copy="btnBack"></button>
   </section>
 
   <!-- ============ GAME ============ -->
   <section id="screen-game" class="screen">
     <canvas id="game-canvas"></canvas>
     <div id="hud">
-      <div id="hud-lives" class="hud-chip" title="Lives">&hearts;&hearts;&hearts;</div>
-      <div id="hud-streak" class="hud-chip" title="5 correct in a row = +1 life">
+      <div id="hud-lives" class="hud-chip" data-copy-title="hudLivesLabel">&hearts;&hearts;&hearts;</div>
+      <div id="hud-streak" class="hud-chip" data-copy-title="hudStreakLabel">
         <span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span><span class="pip"></span>
       </div>
       <div id="hud-distance" class="hud-chip">0 m</div>
       <div id="hud-topic" class="hud-chip hud-dim"></div>
-      <button id="btn-pause" class="hud-chip hud-btn" title="Pause (Esc)">&#10074;&#10074;</button>
+      <button id="btn-pause" class="hud-chip hud-btn" data-copy-title="hudPauseLabel">&#10074;&#10074;</button>
     </div>
+
+    <!-- steering reminder, first run only — fades out by itself -->
+    <div id="steer-hint" data-copy="steerHint" hidden></div>
 
     <!-- The recovery question. Opening it freezes the world. -->
     <div id="modal-question" class="modal-backdrop" hidden>
       <div class="modal">
-        <p class="modal-kicker" id="modal-kicker">Get it right to win your life back!</p>
+        <p class="modal-kicker" id="modal-kicker"></p>
         <p id="modal-prompt" class="modal-prompt"></p>
         <p id="modal-ask" class="modal-ask" hidden></p>
         <div id="modal-choices" class="modal-choices"></div>
         <form id="modal-fib-form" hidden>
-          <input id="modal-fib-input" class="fib-input" autocomplete="off" spellcheck="false" placeholder="your answer" />
-          <button type="submit" class="btn btn-primary">Answer</button>
+          <input id="modal-fib-input" class="fib-input" autocomplete="off" spellcheck="false" />
+          <button type="submit" class="btn btn-primary" data-copy="btnAnswer"></button>
         </form>
         <div id="modal-feedback" hidden>
           <p id="feedback-verdict" class="feedback-verdict"></p>
           <p id="feedback-explain" class="feedback-explain"></p>
-          <button id="btn-continue" class="btn btn-primary">Keep climbing</button>
+          <button id="btn-continue" class="btn btn-primary"></button>
         </div>
       </div>
     </div>
 
     <div id="overlay-pause" class="modal-backdrop" hidden>
       <div class="modal">
-        <h2>Paused</h2>
+        <h2 data-copy="paused"></h2>
         <div class="btn-col">
-          <button id="btn-resume" class="btn btn-primary">Resume</button>
-          <button id="btn-quit" class="btn">Back to menu</button>
+          <button id="btn-resume" class="btn btn-primary" data-copy="btnResume"></button>
+          <button id="btn-quit" class="btn" data-copy="btnQuit"></button>
         </div>
       </div>
     </div>
@@ -130,20 +149,35 @@
       <svg class="hero-circle dead" viewBox="0 0 100 100" aria-hidden="true">
         <circle cx="50" cy="50" r="44" class="hero-body" />
         <!-- cross-eyed, as designed -->
-        <path d="M30 36 l12 12 M42 36 l-12 12" stroke="#0b0f1e" stroke-width="5" stroke-linecap="round" />
-        <path d="M58 36 l12 12 M70 36 l-12 12" stroke="#0b0f1e" stroke-width="5" stroke-linecap="round" />
-        <path d="M34 68 Q50 58 66 68" stroke="#0b0f1e" stroke-width="6" fill="none" stroke-linecap="round" />
+        <path d="M30 36 l12 12 M42 36 l-12 12" class="face-stroke" stroke-width="5" stroke-linecap="round" />
+        <path d="M58 36 l12 12 M70 36 l-12 12" class="face-stroke" stroke-width="5" stroke-linecap="round" />
+        <path d="M34 68 Q50 58 66 68" class="face-stroke" stroke-width="6" stroke-linecap="round" />
       </svg>
-      <h2 class="gameover-title">Game over</h2>
+      <h2 class="gameover-title" data-copy="gameOverTitle"></h2>
       <div id="gameover-stats" class="gameover-stats"></div>
       <div class="btn-col">
-        <button id="btn-again" class="btn btn-primary">Play again</button>
-        <button id="btn-share" class="btn">Save my score card</button>
-        <button id="btn-menu" class="btn">Menu</button>
+        <button id="btn-again" class="btn btn-primary" data-copy="btnAgain"></button>
+        <button id="btn-share" class="btn" data-copy="btnShare"></button>
+        <button id="btn-menu" class="btn" data-copy="btnMenu"></button>
       </div>
     </div>
   </section>
 
+  <!-- Last-resort trap. main.js has its own boot-failure message, but that only
+       helps once main.js RUNS: a syntax error in one of the modules (copy.js is
+       the one that gets hand-edited) fails at instantiation, before any of it
+       executes. Without this the player gets a silent, wordless page. -->
+  <script>
+    window.addEventListener("error", function (e) {
+      if (document.getElementById("fatal")) return;
+      var d = document.createElement("div");
+      d.id = "fatal";
+      d.setAttribute("style", "position:fixed;inset:0;z-index:999;display:flex;align-items:center;justify-content:center;text-align:center;background:#ffffff;color:#1a1a1a;font:18px system-ui,sans-serif");
+      d.innerHTML = "<p>The game couldn't start.<br/><small style='color:#555555'>" +
+        String((e && e.message) || "").replace(/</g, "&lt;") + "</small></p>";
+      document.body.appendChild(d);
+    });
+  </script>
   <script type="module" src="js/main.js"></script>
 </body>
 </html>

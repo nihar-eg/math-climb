@@ -25,11 +25,16 @@ async function boot() {
 }
 
 boot().catch((err) => {
-  // the never-white-screen rule: if boot fails, say so in plain words
+  // The never-white-screen rule. This message must not depend on the theme:
+  // it also has to work when the STYLESHEET is what failed, so it paints its
+  // own background and uses dark ink rather than any CSS variable. (It used to
+  // hard-code the neon theme's near-white text, which measured 1.01:1 against
+  // the pastel background — the one guard against a white screen WAS a white
+  // screen.)
   console.error(err);
   document.body.innerHTML =
-    `<div style="display:flex;height:100vh;align-items:center;justify-content:center;text-align:center;color:#eef2ff;font:18px system-ui">
+    `<div style="display:flex;height:100vh;margin:0;align-items:center;justify-content:center;text-align:center;background:#ffffff;color:#1a1a1a;font:18px system-ui,sans-serif">
        <p>Something went wrong loading the game.<br/>
-       <small style="color:#9aa5c5">${String(err).replace(/</g, "&lt;")}</small></p>
+       <small style="color:#555555">${String(err).replace(/</g, "&lt;")}</small></p>
      </div>`;
 });

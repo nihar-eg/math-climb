@@ -1,19 +1,24 @@
-// settings.js — player settings (circle colour, music, volumes).
+// settings.js — player settings (theme, circle colour, music, volumes, and
+// whether they've seen the how-to-play card yet).
 // Storage is INJECTED (defaults to localStorage in the browser) so it tests in
 // Node with a fake. Login-free: everything lives per-browser in localStorage.
 
+import { DEFAULT_THEME, getTheme, isThemeId } from "./themes.js";
+
 export const DEFAULTS = Object.freeze({
-  circleColor: "#39ff14", // neon green
+  theme: DEFAULT_THEME,
+  circleColor: getTheme(DEFAULT_THEME).defaultCircle,
+  // false = "I never picked a colour, just follow the theme"; flips to true the
+  // moment the player taps a swatch or the colour picker, so switching themes
+  // afterwards never clobbers a deliberate choice.
+  circleCustom: false,
   musicOn: true,
   musicVolume: 0.6,
   sfxVolume: 0.8,
+  // The how-to-play card opens by itself on a first visit — Sanaya's review
+  // note was that it took a few tries to work out how the game works.
+  seenHowTo: false,
 });
-
-// Preset neon swatches for the settings screen (a native colour picker can be
-// offered alongside these at Stage 4).
-export const SWATCHES = Object.freeze([
-  "#39ff14", "#ff2d95", "#00e5ff", "#ffd400", "#b56bff", "#ffffff",
-]);
 
 const KEY = "mathslope.settings";
 const HEX6 = /^#[0-9a-fA-F]{6}$/;
@@ -34,12 +39,22 @@ export function clampVolume(v) {
 export function sanitize(s) {
   const out = { ...DEFAULTS };
   if (s && typeof s === "object") {
+    if (isThemeId(s.theme)) out.theme = s.theme;
     if (typeof s.circleColor === "string" && HEX6.test(s.circleColor)) out.circleColor = s.circleColor;
+    if (typeof s.circleCustom === "boolean") out.circleCustom = s.circleCustom;
     if (typeof s.musicOn === "boolean") out.musicOn = s.musicOn;
+    if (typeof s.seenHowTo === "boolean") out.seenHowTo = s.seenHowTo;
     const mv = clampVolume(s.musicVolume); if (mv !== undefined) out.musicVolume = mv;
     const sv = clampVolume(s.sfxVolume); if (sv !== undefined) out.sfxVolume = sv;
   }
   return out;
+}
+
+// Which circle colour a theme switch should land on. Kept separate from
+// sanitize() on purpose: sanitize's one job is to validate what's on disk, so
+// it must never quietly rewrite a colour that was saved deliberately.
+export function circleColorForTheme(settings, themeId) {
+  return settings.circleCustom ? settings.circleColor : getTheme(themeId).defaultCircle;
 }
 
 // Even READING globalThis.localStorage throws in browsers set to block all
@@ -54,11 +69,23 @@ function defaultStorage() {
   }
 }
 
+// A save written before themes existed carries a circleColor chosen for the old
+// neon skin (usually #39ff14) and no way to know whether the player picked it.
+// Sanaya reviewed that build, so her own browser holds exactly this — without
+// migration, "the pastel version" would open with a neon-lime circle.
+export function migrateLegacy(parsed) {
+  if (!parsed || typeof parsed !== "object") return parsed;
+  const preThemeSave = !("theme" in parsed) && !("circleCustom" in parsed);
+  if (!preThemeSave) return parsed;
+  const { circleColor, ...rest } = parsed;   // drop it; the new theme decides
+  return rest;
+}
+
 export function loadSettings(storage = defaultStorage()) {
   try {
     const raw = storage && storage.getItem(KEY);
     if (!raw) return { ...DEFAULTS };
-    return sanitize(JSON.parse(raw));
+    return sanitize(migrateLegacy(JSON.parse(raw)));
   } catch {
     return { ...DEFAULTS }; // corrupt JSON or no storage → safe defaults
   }

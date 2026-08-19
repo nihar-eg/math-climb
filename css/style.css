@@ -1,20 +1,27 @@
-/* style.css — the neon look. All colours live in these variables so the whole
-   skin can be re-tuned from one place (and --circle follows the player's pick
-   in Settings). */
+/* style.css — the whole skin runs off these variables, so a theme only has to
+   swap the values. The real palettes live in js/themes.js (they also carry the
+   canvas colours, which CSS can't reach); themes.js overwrites every variable
+   below at boot from the player's saved theme.
+
+   The values here are the Cotton Candy theme, repeated so the very first paint
+   — the split second before the JS module loads — is already the right colour
+   instead of a flash of something else. */
 :root {
-  --bg: #0b0f1e;
-  --bg-deep: #060913;
-  --panel: #141b33;
-  --panel-edge: #26305a;
-  --text: #eef2ff;
-  --dim: #9aa5c5;
-  --circle: #39ff14; /* overwritten from saved settings at boot */
-  --neon-cyan: #00e5ff;
-  --neon-pink: #ff2d95;
-  --neon-yellow: #ffd400;
-  --neon-purple: #b56bff;
-  --neon-green: #39ff14;
-  --danger: #ff4d5e;
+  --bg: #f7f2fb;
+  --bg-deep: #ece2f6;
+  --panel: #ffffff;
+  --panel-edge: #ddcdee;
+  --text: #35283f;
+  --dim: #665a78;
+  --ink: #35283f;    /* the face on the circle, and any ink drawn on a colour */
+  --circle: #f36bab; /* overwritten from saved settings at boot */
+  --accent-a: #f36bab;
+  --accent-b: #5b93e0;
+  --accent-c: #d9982f;
+  --accent-d: #9b63e8;
+  --danger: #d63a5c;
+  --good: #158f63;
+  --warn: #9a5b16;
 }
 
 * { box-sizing: border-box; }
@@ -79,11 +86,17 @@ html, body {
   cursor: pointer;
   transition: transform 0.08s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
-.btn:hover, .btn:focus-visible {
+.btn:hover {
   border-color: var(--circle);
   box-shadow: 0 0 14px color-mix(in srgb, var(--circle) 45%, transparent);
   transform: translateY(-1px);
-  outline: none;
+}
+/* Focus is NOT tinted with --circle: that's the player's own colour and white
+   is one of the choices, which would leave a keyboard user with no visible
+   focus at all. --text always contrasts with the background by construction. */
+:focus-visible {
+  outline: 3px solid var(--text);
+  outline-offset: 2px;
 }
 .btn:active { transform: translateY(1px); }
 .btn-primary {
@@ -118,10 +131,9 @@ html, body {
   cursor: pointer;
   transition: transform 0.08s ease, box-shadow 0.15s ease;
 }
-.topic-card:hover, .topic-card:focus-visible {
+.topic-card:hover {
   box-shadow: 0 0 18px color-mix(in srgb, var(--accent) 55%, transparent);
   transform: translateY(-2px);
-  outline: none;
 }
 .topic-card .topic-icon { font-size: 34px; text-shadow: 0 0 12px var(--accent); }
 .topic-card .topic-count { font-size: 14px; font-weight: 400; color: var(--dim); }
@@ -159,8 +171,14 @@ html, body {
   cursor: pointer;
   transition: transform 0.08s ease;
 }
+/* the hairline matters: without it a white swatch is invisible on the white
+   settings panel (caught in the browser, not in a test) */
+.swatch { box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.45); }
 .swatch:hover { transform: scale(1.12); }
-.swatch.selected { border-color: var(--text); box-shadow: 0 0 10px var(--sw); }
+.swatch.selected {
+  border-color: var(--text);
+  box-shadow: 0 0 0 1px rgba(128, 128, 128, 0.45), 0 0 10px var(--sw);
+}
 
 .picker-label, .slider-label { font-size: 16px; color: var(--dim); display: flex; align-items: center; gap: 10px; }
 .slider-label { width: 100%; justify-content: space-between; }
@@ -168,12 +186,20 @@ input[type="range"] { width: 130px; accent-color: var(--circle); }
 input[type="checkbox"] { width: 19px; height: 19px; accent-color: var(--circle); }
 input[type="color"] { width: 44px; height: 34px; border: none; background: none; cursor: pointer; }
 
-.notice { color: var(--neon-yellow); font-size: 16px; max-width: 46ch; text-align: center; }
+.notice { color: var(--warn); font-size: 16px; max-width: 46ch; text-align: center; }
 .notice.small { font-size: 14px; }
 
 /* ---------- game screen ---------- */
 #screen-game { padding: 0; }
-#game-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; background: var(--bg-deep); }
+#game-canvas {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  background: var(--bg-deep);
+  /* the copy promises hold-to-steer; without this the browser's own pan and
+     long-press gestures cancel the touch mid-run */
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
 
 #hud {
   position: absolute;
@@ -203,21 +229,32 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
   margin: 0 2.5px;
   background: var(--panel-edge);
 }
-.pip.lit { background: var(--circle); box-shadow: 0 0 7px var(--circle); }
+/* ringed, so a pale or white circle colour still reads against the HUD chip */
+.pip.lit { background: var(--circle); box-shadow: 0 0 0 1px var(--text), 0 0 7px var(--circle); }
 
 /* ---------- modal ---------- */
 .modal-backdrop {
   position: absolute;
   inset: 0;
   display: flex;
-  align-items: center;
+  /* flex-start, not center: a card taller than the viewport centred inside a
+     flex container overflows off the TOP, and that overflow cannot be scrolled
+     back to. Measured at 375x600 the "How to play" heading sat at -21px and was
+     unreachable. Start-aligned + its own scroll keeps every card fully readable
+     on a short phone screen. */
+  align-items: flex-start;
   justify-content: center;
+  overflow-y: auto;
+  padding: 20px;
   background: color-mix(in srgb, var(--bg-deep) 72%, transparent);
   backdrop-filter: blur(3px);
   z-index: 10;
 }
 .modal-backdrop[hidden] { display: none; }
 .modal {
+  margin: auto;                     /* centres when it fits, start-aligns when it doesn't */
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
   background: var(--panel);
   border: 2px solid var(--panel-edge);
   border-radius: 20px;
@@ -230,7 +267,8 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
   text-align: center;
   box-shadow: 0 0 40px color-mix(in srgb, var(--circle) 25%, transparent);
 }
-.modal-kicker { margin: 0; color: var(--circle); font-size: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
+/* --accent-a, not --circle: this is TEXT, and a white circle made it vanish. */
+.modal-kicker { margin: 0; color: var(--accent-a); font-size: 16px; letter-spacing: 0.05em; text-transform: uppercase; }
 .modal-prompt { margin: 0; font-size: 27px; line-height: 1.4; letter-spacing: 0.02em; }
 .modal-prompt sup, .feedback-explain sup { font-size: 0.62em; }
 .modal-ask { margin: 0; font-size: 21px; color: var(--dim); }
@@ -247,7 +285,7 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
   border-radius: 12px;
   cursor: pointer;
 }
-.choice-btn:hover, .choice-btn:focus-visible { border-color: var(--circle); outline: none; }
+.choice-btn:hover { border-color: var(--circle); }
 
 #modal-fib-form { display: flex; gap: 10px; justify-content: center; }
 #modal-fib-form[hidden] { display: none; }
@@ -261,15 +299,28 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
   border-radius: 12px;
   text-align: center;
 }
-.fib-input:focus { border-color: var(--circle); outline: none; }
+.fib-input:focus { border-color: var(--circle); }
 
 .feedback-verdict { margin: 0; font-size: 23px; font-weight: 700; }
-.feedback-verdict.good { color: var(--neon-green); }
+.feedback-verdict.good { color: var(--good); }
 .feedback-verdict.bad { color: var(--danger); }
 .feedback-explain { margin: 0; color: var(--text); font-size: 18px; line-height: 1.5; }
 
-/* ---------- game over: all black, with stars (her design) ---------- */
-.starfield { background: #000; }
+/* ---------- game over: all black, with stars (her design) ----------
+   This screen is deliberately NOT themed — black-with-stars is Sanaya's own
+   call from Session 3 and it survives every palette. But the pale themes set a
+   dark --text, which would be invisible here, so the screen re-lights its own
+   text tokens. Anything inside .starfield reads light-on-black regardless of
+   the theme. */
+.starfield {
+  background: #000;
+  --text: #ffffff;
+  --dim: #b9c0d6;
+  --panel: #14141f;
+  --panel-edge: #2e2e45;
+  --ink: #0b0f1e;
+  color: var(--text);
+}
 .starfield::before {
   content: "";
   position: absolute; inset: 0;
@@ -291,10 +342,123 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
 .gameover-wrap { position: relative; display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
 .gameover-title { margin: 0; font-size: 42px; letter-spacing: 0.1em; }
 .gameover-stats { color: var(--text); font-size: 20px; line-height: 1.7; }
-.gameover-stats b { color: var(--circle); }
+/* --accent-c, not --circle: the player can pick any colour from the native
+   picker, and this screen is always black — a dark pick made the numbers
+   invisible. The circle graphic below still shows their real colour. */
+.gameover-stats b { color: var(--accent-c); }
+/* ...and the circle itself gets a hairline, so even a near-black pick reads */
+.starfield .hero-body { stroke: rgba(255, 255, 255, 0.55); stroke-width: 2; }
 
 @media (max-width: 640px) {
   .topic-grid { grid-template-columns: repeat(2, minmax(130px, 1fr)); width: 100%; }
   .modal { padding: 20px; }
   .modal-prompt { font-size: 21px; }
 }
+
+/* ---------- the face on the circle ----------
+   The SVG faces used to hard-code the dark navy of the neon theme. They now
+   follow --ink, so the face stays readable on a pastel circle too. (Classes,
+   not fill="var(--ink)" attributes — CSS variables don't work inside SVG
+   presentation attributes in every browser.) */
+.face-fill { fill: var(--ink); }
+.face-stroke { stroke: var(--ink); fill: none; }
+
+/* ---------- how to play ----------
+   Sanaya's review: "it took me a few tries to see how the game works". So this
+   card opens by itself the first time someone plays, and lives behind a button
+   on the title screen after that. */
+.howto-card {
+  margin: auto;                     /* centres when it fits, start-aligns when it doesn't */
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  background: var(--panel);
+  border: 2px solid var(--panel-edge);
+  border-radius: 20px;
+  padding: 26px 30px;
+  max-width: 580px;
+  width: min(92vw, 580px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+.howto-card h2 { margin: 0; font-size: 27px; text-align: center; }
+.howto-steps { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 13px; }
+.howto-steps li {
+  display: flex;
+  gap: 13px;
+  align-items: flex-start;
+  font-size: 17px;
+  line-height: 1.45;
+}
+.howto-num {
+  flex: 0 0 auto;
+  width: 27px; height: 27px;
+  margin-top: 1px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  background: var(--circle);
+}
+.howto-card .btn { align-self: center; }
+
+/* the steer reminder that fades out during a first run */
+#steer-hint {
+  position: absolute;
+  left: 50%;
+  bottom: 13%;
+  transform: translateX(-50%);
+  padding: 9px 20px;
+  border-radius: 999px;
+  font-size: 17px;
+  color: var(--text);
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  border: 1px solid var(--panel-edge);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 0.7s ease;
+}
+#steer-hint[hidden] { display: none; }
+#steer-hint.fading { opacity: 0; }
+
+/* ---------- theme picker (settings) ---------- */
+.theme-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.theme-chip {
+  font: inherit;
+  font-size: 15px;
+  padding: 9px 11px 11px;
+  min-width: 104px;
+  color: var(--text);
+  background: var(--panel);
+  border: 2px solid var(--panel-edge);
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  transition: transform 0.08s ease, border-color 0.15s ease;
+}
+.theme-chip:hover { transform: translateY(-2px); }
+.theme-chip.selected { border-color: var(--circle); }
+/* a miniature of the theme: its background with its own bar colours on top */
+.theme-preview {
+  width: 84px; height: 46px;
+  border-radius: 9px;
+  border: 1px solid rgba(128, 128, 128, 0.35);
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  padding: 6px;
+  overflow: hidden;
+}
+.theme-preview span { flex: 1; border-radius: 3px; }
+.theme-preview span:nth-child(1) { height: 40%; }
+.theme-preview span:nth-child(2) { height: 78%; }
+.theme-preview span:nth-child(3) { height: 55%; }
+.theme-preview span:nth-child(4) { height: 92%; }
+.theme-chip-name { font-size: 14px; color: var(--dim); }
+.theme-chip.selected .theme-chip-name { color: var(--text); }
