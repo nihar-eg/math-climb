@@ -84,7 +84,7 @@ export const COPY = Object.freeze({
   settingsMusicOn: "Background music",
   settingsMusicVol: "Music volume",
   settingsSfxVol: "Sound effects",
-  musicMissing: "Music's not in yet — sound effects still work.",
+  settingsTrack: "Music",
 
   // ------------------------------------------------- the recovery question
   modalKicker: "Oof! Get this right and you're back in.",

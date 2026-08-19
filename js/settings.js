@@ -4,6 +4,7 @@
 // Node with a fake. Login-free: everything lives per-browser in localStorage.
 
 import { DEFAULT_THEME, getTheme, isThemeId } from "./themes.js";
+import { DEFAULT_TRACK, isTrackId } from "./music.js";
 
 export const DEFAULTS = Object.freeze({
   theme: DEFAULT_THEME,
@@ -13,6 +14,7 @@ export const DEFAULTS = Object.freeze({
   // afterwards never clobbers a deliberate choice.
   circleCustom: false,
   musicOn: true,
+  musicTrack: DEFAULT_TRACK,
   musicVolume: 0.6,
   sfxVolume: 0.8,
   // The how-to-play card opens by itself on a first visit — Sanaya's review
@@ -43,6 +45,7 @@ export function sanitize(s) {
     if (typeof s.circleColor === "string" && HEX6.test(s.circleColor)) out.circleColor = s.circleColor;
     if (typeof s.circleCustom === "boolean") out.circleCustom = s.circleCustom;
     if (typeof s.musicOn === "boolean") out.musicOn = s.musicOn;
+    if (isTrackId(s.musicTrack)) out.musicTrack = s.musicTrack;
     if (typeof s.seenHowTo === "boolean") out.seenHowTo = s.seenHowTo;
     const mv = clampVolume(s.musicVolume); if (mv !== undefined) out.musicVolume = mv;
     const sv = clampVolume(s.sfxVolume); if (sv !== undefined) out.sfxVolume = sv;

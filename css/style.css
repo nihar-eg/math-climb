@@ -477,4 +477,24 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
 .theme-preview span:nth-child(3) { height: 55%; }
 .theme-preview span:nth-child(4) { height: 92%; }
 .theme-chip-name { font-size: 14px; color: var(--dim); }
+
+/* ---------- music picker (settings) ---------- */
+.track-row { display: flex; flex-direction: column; gap: 8px; width: 100%; }
+.track-chip {
+  font: inherit;
+  text-align: left;
+  padding: 10px 14px;
+  color: var(--text);
+  background: var(--bg);
+  border: 2px solid var(--panel-edge);
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.track-chip:hover { border-color: var(--circle); }
+.track-chip.selected { border-color: var(--circle); background: color-mix(in srgb, var(--circle) 12%, var(--bg)); }
+.track-name { font-size: 17px; font-weight: 600; }
+.track-blurb { font-size: 13px; color: var(--dim); line-height: 1.35; }
 .theme-chip.selected .theme-chip-name { color: var(--text); }

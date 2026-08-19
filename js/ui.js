@@ -10,6 +10,7 @@ import { splitPrompt, toMathHtml } from "./mathtext.js";
 import { COPY } from "./copy.js";
 import { loadRecords, saveRecords, bestFor, recordDistance } from "./records.js";
 import { THEMES, applyTheme, getTheme } from "./themes.js";
+import { TRACKS } from "./music.js";
 import * as audio from "./audio.js";
 
 const TOPIC_ICONS = { algebra: "𝑥", exponents: "xⁿ", ratios: "⚖", coordinates: "⊹" };
@@ -51,6 +52,20 @@ export function initUI({ bank, game }) {
   }
   $("modal-fib-input").placeholder = COPY.fibPlaceholder; // a placeholder isn't text content
 
+  // A browser will not let audio start until the player has interacted, so the
+  // FIRST click or key press anywhere is what gets the music going — meaning it
+  // plays from the title screen onwards instead of waiting for a run to start.
+  // All three matter: pointerdown is the earliest signal for a mouse or a tap,
+  // keydown covers someone playing entirely from the keyboard, and click catches
+  // the cases the other two miss (a button activated via Enter, or assistive
+  // tech, both of which produce a click without a pointerdown).
+  const GESTURES = ["pointerdown", "keydown", "click"];
+  const startAudioOnFirstGesture = () => {
+    for (const e of GESTURES) document.removeEventListener(e, startAudioOnFirstGesture);
+    audio.unlock();
+  };
+  for (const e of GESTURES) document.addEventListener(e, startAudioOnFirstGesture);
+
   applyThemeEverywhere(settings.theme);
   applyCircleColor(settings.circleColor);
   audio.applySettings(settings);
@@ -62,7 +77,11 @@ export function initUI({ bank, game }) {
     // is still open (and seenHowTo still unwritten) when the player comes back
     if (name !== "title" && !$("overlay-howto").hidden) closeHowTo();
     for (const s of screens) $(`screen-${s}`).classList.toggle("active", s === name);
-    if (name === "title") refreshResumeButton();
+    if (name === "title") {
+      refreshResumeButton();
+      // the game-over screen deliberately falls silent; the menu should not
+      audio.resumeIfUnlocked();
+    }
   }
 
   document.querySelectorAll("[data-back]").forEach((b) =>
@@ -212,6 +231,7 @@ export function initUI({ bank, game }) {
   function onCollision(q) {
     currentQ = q;
     audio.sfx("collision");
+    audio.duckMusic(true);   // don't compete with someone doing maths
     const modal = $("modal-question");
     $("modal-kicker").textContent = COPY.modalKicker;
     // problem and ask on separate lines — "x − 4 = 12.   x = ?" rendered as
@@ -283,6 +303,7 @@ export function initUI({ bank, game }) {
 
   $("btn-continue").addEventListener("click", () => {
     $("modal-question").hidden = true;
+    audio.duckMusic(false);
     game.resume(); // decides: back to climbing, or game over
   });
 
@@ -301,8 +322,7 @@ export function initUI({ bank, game }) {
   $("btn-quit").addEventListener("click", () => {
     $("overlay-pause").hidden = true;
     game.suspend();          // put the run down, don't throw it away
-    audio.stopMusic();
-    show("title");
+    show("title");           // music carries on — the menu isn't silent any more
   });
 
   // ---------- resuming a suspended run ----------
@@ -506,6 +526,32 @@ export function initUI({ bank, game }) {
   buildSwatches();
   markTheme();
 
+  // ---------- settings: music ----------
+  const trackRow = $("track-row");
+  for (const track of Object.values(TRACKS)) {
+    const chip = document.createElement("button");
+    chip.className = "track-chip";
+    chip.dataset.track = track.id;
+    const name = document.createElement("span");
+    name.className = "track-name";
+    name.textContent = track.label;
+    const blurb = document.createElement("span");
+    blurb.className = "track-blurb";
+    blurb.textContent = track.blurb;
+    chip.append(name, blurb);
+    chip.addEventListener("click", () => {
+      settings = saveSettings({ ...settings, musicTrack: track.id });
+      markTrack();
+      // this click IS the browser's audio gesture, so it can start immediately
+      audio.previewTrack(track.id);
+    });
+    trackRow.appendChild(chip);
+  }
+  function markTrack() {
+    [...trackRow.children].forEach((c) => c.classList.toggle("selected", c.dataset.track === settings.musicTrack));
+  }
+  markTrack();
+
   // ---------- settings: sound ----------
   $("music-on").checked = settings.musicOn;
   $("music-volume").value = settings.musicVolume;
@@ -514,7 +560,6 @@ export function initUI({ bank, game }) {
   $("music-on").addEventListener("change", (e) => {
     settings = saveSettings({ ...settings, musicOn: e.target.checked });
     audio.applySettings(settings);
-    updateMusicNotice();
   });
   $("music-volume").addEventListener("input", (e) => {
     settings = saveSettings({ ...settings, musicVolume: e.target.value });
@@ -525,10 +570,7 @@ export function initUI({ bank, game }) {
     audio.applySettings(settings);
     audio.sfx("correct"); // let them hear the new volume
   });
-  function updateMusicNotice() { $("music-missing").hidden = audio.musicStatus() !== false; }
-  // audio.js only learns the music file is absent after the first unlock, so ask
-  // again shortly after a run starts — otherwise this notice never shows at all
-  setTimeout(updateMusicNotice, 3000);
+
 
   function applyCircleColor(color) {
     document.documentElement.style.setProperty("--circle", color);

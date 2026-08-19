@@ -1,17 +1,18 @@
-// audio.js — sound without any downloaded files (yet).
-// Sound effects are SYNTHESIZED with the Web Audio API — tiny recipes of
-// oscillators, so the repo stays zero-asset and every sound is inspectable
-// code. Background music expects assets/music.mp3 (a royalty-free pick,
-// pending); if the file isn't there, the game simply plays without music.
+// audio.js — all sound, with no downloaded files at all.
+// Sound effects AND the background music are SYNTHESIZED with the Web Audio
+// API — oscillators and envelopes, so the repo stays zero-asset, there is
+// nothing to license, and every sound is inspectable code. The music itself
+// lives in music.js; this file owns the audio context and the volumes.
 //
 // Browser rule: audio may only start inside a user gesture (a click/keydown),
 // so unlock() is called from the level-select click that starts the game.
 
+import { createMusicEngine, DEFAULT_TRACK } from "./music.js";
+
 let ctx = null;
 let sfxGain = null;
-let music = null;
-let musicAvailable = null; // null = unknown, then true/false
-let settings = { musicOn: true, musicVolume: 0.6, sfxVolume: 0.8 };
+let engine = null;
+let settings = { musicOn: true, musicVolume: 0.6, sfxVolume: 0.8, musicTrack: DEFAULT_TRACK };
 
 function ensureCtx() {
   if (!ctx) {
@@ -21,6 +22,8 @@ function ensureCtx() {
     sfxGain = ctx.createGain();
     sfxGain.gain.value = settings.sfxVolume;
     sfxGain.connect(ctx.destination);
+    engine = createMusicEngine({ ctx, destination: ctx.destination });
+    engine.setVolume(settings.musicVolume);
   }
   if (ctx.state === "suspended") ctx.resume();
   return ctx;
@@ -34,26 +37,37 @@ export function unlock() {
 export function applySettings(s) {
   settings = { ...settings, ...s };
   if (sfxGain) sfxGain.gain.value = settings.sfxVolume;
-  if (music) music.volume = settings.musicVolume;
-  if (music && !settings.musicOn) music.pause();
-  if (settings.musicOn && musicAvailable) startMusic();
+  if (!engine) return;
+  engine.setVolume(settings.musicVolume);
+  if (!settings.musicOn) engine.stop();
+  else if (ctx && ctx.state === "running") startMusic();
 }
 
-export function musicStatus() { return musicAvailable; }
-
-function startMusic() {
-  if (musicAvailable === false) return;
-  if (!music) {
-    music = new Audio("assets/music.mp3");
-    music.loop = true;
-    music.volume = settings.musicVolume;
-    music.addEventListener("error", () => { musicAvailable = false; music = null; });
-    music.addEventListener("canplay", () => { musicAvailable = true; });
-  }
-  music.play().catch(() => { /* not available or blocked — fine, SFX carry the game */ });
+// Auditioning a track from the settings screen: that click is itself the
+// browser's audio gesture, so it can start straight away.
+export function previewTrack(id) {
+  if (!ensureCtx()) return;
+  settings = { ...settings, musicTrack: id };
+  if (settings.musicOn) engine.play(id);
 }
 
-export function stopMusic() { if (music) music.pause(); }
+export function startMusic() {
+  if (!ensureCtx() || !engine) return;
+  engine.play(settings.musicTrack);
+}
+
+export function stopMusic() { if (engine) engine.stop(); }
+
+// Start the music only if the browser has already let audio through (i.e. the
+// player has clicked something). Safe to call from anywhere — before the first
+// gesture it does nothing rather than throwing or silently failing.
+export function resumeIfUnlocked() {
+  if (ctx && engine && settings.musicOn) startMusic();
+}
+
+// Drop the music back while a question is on screen — it should not compete
+// with a player trying to do the maths.
+export function duckMusic(on) { if (engine) engine.duck(on); }
 
 // one synthesized note
 function tone(freq, when, dur, type = "sine", peak = 0.5) {
