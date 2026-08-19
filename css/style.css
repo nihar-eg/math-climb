@@ -346,6 +346,22 @@ input[type="color"] { width: 44px; height: 34px; border: none; background: none;
    picker, and this screen is always black — a dark pick made the numbers
    invisible. The circle graphic below still shows their real colour. */
 .gameover-stats b { color: var(--accent-c); }
+/* the best-distance line: loud when it's a new record, quiet when it's a target */
+.gameover-best { margin: 0; font-size: 20px; color: var(--dim); }
+.gameover-best[hidden] { display: none; }
+.gameover-best.is-best {
+  color: var(--good);
+  font-weight: 700;
+  font-size: 23px;
+  letter-spacing: 0.02em;
+}
+/* the target sitting on each level button, so you can see what you're chasing */
+.level-best {
+  margin-left: 10px;
+  font-size: 14px;
+  color: var(--dim);
+  font-variant-numeric: tabular-nums;
+}
 /* ...and the circle itself gets a hairline, so even a near-black pick reads */
 .starfield .hero-body { stroke: rgba(255, 255, 255, 0.55); stroke-width: 2; }
 

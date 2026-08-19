@@ -23,6 +23,29 @@ export const TUNING = {
   grace: 1.4,         // seconds of safety after a question (no instant re-hit)
 };
 
+// Steering is tuned for this canvas width. On a wider screen every gap is
+// further away in pixels, so a fixed px/second steering speed quietly makes the
+// game harder on a big monitor than on a small one — measured, before this
+// existed, as 62% of consecutive gaps physically unreachable at 1440px versus
+// 34% at 800px. Scaling accel and max speed together keeps time-to-top-speed
+// constant and makes steering SCREENS per second, so a run means the same thing
+// on every tester's laptop.
+export const REFERENCE_W = 1280;
+
+// Clamped only as a rail against absurd viewports (a phone in a tiny frame, an
+// ultrawide). Inside the clamp the scaling is exact.
+export function steerScaleFor(width) {
+  if (!Number.isFinite(width) || width <= 0) return 1;
+  return Math.min(2.2, Math.max(0.5, width / REFERENCE_W));
+}
+
+// A run put down via "Back to menu" is SUSPENDED, not destroyed — it keeps its
+// distance, lives, streak, obstacles and question bag until the player either
+// resumes it or starts a new one. A finished run is never resumable.
+export function isResumableState(state, over) {
+  return state === "suspended" && !over;
+}
+
 // Filled in by setTheme() below — see themes.js. Defaults keep the game
 // drawable even if a theme is never pushed in.
 const FALLBACK = getTheme();
@@ -31,7 +54,7 @@ export function createGame({ canvas, hooks }) {
   // hooks: { onCollision(q), onHud(run, meters), onGameOver(run, meters), pickQuestion() }
   const ctx = canvas.getContext("2d");
 
-  let state = "idle"; // idle | running | question | paused | gameover
+  let state = "idle"; // idle | running | question | paused | suspended | gameover
   let run = newRun();
   let gameTime = 0;     // seconds of actual play — does NOT advance in menus/modals
   let distance = 0;     // px climbed → shown as meters
@@ -53,12 +76,14 @@ export function createGame({ canvas, hooks }) {
   let glow = FALLBACK.glow;              // bloom reads on dark, vanishes on light
   let barStroke = FALLBACK.obstacleStroke;
   let starColor = FALLBACK.star;         // white on the dark themes, a soft tint on the pale ones
+  let steerScale = 1;                    // recomputed from the canvas width in resize()
 
   // ---- sizing (crisp on retina; clamp DPR so old laptops don't melt) ----
   function resize() {
     const rect = canvas.getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = rect.width; H = rect.height;
+    steerScale = steerScaleFor(W);   // live, so resizing mid-run stays fair
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -116,6 +141,19 @@ export function createGame({ canvas, hooks }) {
     return dx * dx + dy * dy <= TUNING.ballR * TUNING.ballR;
   }
 
+  // Clear anything about to land on the ball and grant the grace window — a
+  // fair re-entry. The cleared zone covers everything that would reach the ball
+  // DURING the grace window at the current speed, so it stays fair even when
+  // the ramp is high. Used both after a recovery question and when a suspended
+  // run is picked back up (where the player has been away and has no idea
+  // what's in flight).
+  function clearLandingZone() {
+    graceLeft = TUNING.grace;
+    const yBall = H * 0.72;
+    const reach = Math.max(200, scrollSpeed() * TUNING.grace);
+    obstacles = obstacles.filter((o) => !(o.y + o.h > yBall - reach && o.y < yBall + 60));
+  }
+
   // ---- the loop ----
   let last = performance.now();
   function frame(now) {
@@ -140,11 +178,15 @@ export function createGame({ canvas, hooks }) {
     // Friction is strong when no key is held (so the ball stops quickly) and
     // gentle while steering (so it doesn't fight the player).
     const dir = (keys.right ? 1 : 0) - (keys.left ? 1 : 0);
-    ball.vx += dir * TUNING.playerAccel * dt;
+    // both scaled by the same factor, so time-to-top-speed is unchanged and only
+    // the distance covered scales with the screen
+    const accel = TUNING.playerAccel * steerScale;
+    const maxV = TUNING.playerMaxV * steerScale;
+    ball.vx += dir * accel * dt;
     const frictionShare = Math.min(TUNING.playerFriction * dt, 1); // fraction of speed lost this frame
     const brakingStrength = dir === 0 ? 1 : 0.25;
     ball.vx -= ball.vx * frictionShare * brakingStrength;
-    ball.vx = Math.max(-TUNING.playerMaxV, Math.min(TUNING.playerMaxV, ball.vx));
+    ball.vx = Math.max(-maxV, Math.min(maxV, ball.vx));
     ball.x += ball.vx * dt;
     if (ball.x < TUNING.ballR) { ball.x = TUNING.ballR; ball.vx = 0; }
     if (ball.x > W - TUNING.ballR) { ball.x = W - TUNING.ballR; ball.vx = 0; }
@@ -314,18 +356,23 @@ export function createGame({ canvas, hooks }) {
         hooks.onGameOver(run, meters());
         return;
       }
-      graceLeft = TUNING.grace;
-      // clear anything about to land on the respawn spot — fair restart.
-      // The cleared zone covers everything that would reach the ball DURING
-      // the grace window at the current speed, so recovery is fair even when
-      // the ramp is high.
-      const yBall = H * 0.72;
-      const reach = Math.max(200, scrollSpeed() * TUNING.grace);
-      obstacles = obstacles.filter((o) => !(o.y + o.h > yBall - reach && o.y < yBall + 60));
+      clearLandingZone();
       state = "running";
     },
     pause() { if (state === "running") state = "paused"; },
     unpause() { if (state === "paused") state = "running"; },
+    // "Back to menu" — put the run down without losing it. Everything (run,
+    // distance, gameTime, obstacles, ball position) is left exactly as it was.
+    suspend() { if (state === "running" || state === "paused") state = "suspended"; },
+    isResumable: () => isResumableState(state, run.over),
+    resumeRun() {
+      if (!isResumableState(state, run.over)) return false;
+      clearLandingZone();   // they've been away — don't drop them onto a bar
+      state = "running";
+      hooks.onHud(run, meters());
+      return true;
+    },
+    // throw the suspended run away for good (starting a new one does this)
     stop() { state = "idle"; },
     setKeys(k) { keys = { ...keys, ...k }; },
     setCircleColor(c) { circleColor = c; },
@@ -356,6 +403,9 @@ export function createGame({ canvas, hooks }) {
       set gameTime(v) { gameTime = v; },
       get distance() { return distance; },
       get obstacles() { return obstacles; },
+      get ball() { return { x: ball.x, vx: ball.vx }; },
+      get steerScale() { return steerScale; },
+      get size() { return { W, H }; },
       get run() { return run; },
       scrollSpeed, spawnInterval,
       // deterministic fixed-step driver, so checks don't depend on rAF timing

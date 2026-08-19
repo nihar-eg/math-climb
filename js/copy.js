@@ -27,6 +27,9 @@ export const COPY = Object.freeze({
   gameTitle: "MATH CLIMB",                 // working title — the real name is your call
   tagline: "Climb as high as you can. Dodge the bars. Math is your extra life.",
   btnPlay: "Let's go",
+  // shown on the front screen only when a run is waiting to be picked back up;
+  // the number is the distance you'd be returning to
+  btnResumeRun: (m) => `Resume your run — ${m} m`,       // (dynamic)
   btnHowTo: "How to play",
   btnSettings: "Settings",
   credit: "a game by Sanaya",              // yours
@@ -102,6 +105,9 @@ export const COPY = Object.freeze({
 
   // ------------------------------------------------------------- game over
   gameOverTitle: "Game over",
+  newBest: (m) => `New best — ${m} m!`,                                                  // (dynamic)
+  bestSoFar: (m) => `Your best here: ${m} m`,                                            // (dynamic)
+  levelBest: (m) => `best ${m} m`,          // shown on the level buttons  (dynamic)
   btnAgain: "Run it back",
   btnShare: "Save your score card",
   btnMenu: "Menu",

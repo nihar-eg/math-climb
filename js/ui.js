@@ -8,6 +8,7 @@ import { loadSettings, saveSettings, circleColorForTheme } from "./settings.js";
 import { STREAK_TARGET } from "./rules.js";
 import { splitPrompt, toMathHtml } from "./mathtext.js";
 import { COPY } from "./copy.js";
+import { loadRecords, saveRecords, bestFor, recordDistance } from "./records.js";
 import { THEMES, applyTheme, getTheme } from "./themes.js";
 import * as audio from "./audio.js";
 
@@ -29,6 +30,7 @@ const $ = (id) => document.getElementById(id);
 
 export function initUI({ bank, game }) {
   let settings = loadSettings();
+  let records = loadRecords();
   let chosenTopic = null;
   let chosenLevel = null;
   let bag = null;
@@ -60,6 +62,7 @@ export function initUI({ bank, game }) {
     // is still open (and seenHowTo still unwritten) when the player comes back
     if (name !== "title" && !$("overlay-howto").hidden) closeHowTo();
     for (const s of screens) $(`screen-${s}`).classList.toggle("active", s === name);
+    if (name === "title") refreshResumeButton();
   }
 
   document.querySelectorAll("[data-back]").forEach((b) =>
@@ -121,6 +124,7 @@ export function initUI({ bank, game }) {
       audio.sfx("click");
       chosenTopic = key;
       $("levels-topic-name").textContent = topic.label;
+      refreshLevelBests();
       show("levels");
     });
     grid.appendChild(btn);
@@ -139,6 +143,22 @@ export function initUI({ bank, game }) {
     levelButtons.appendChild(btn);
   }
 
+  // Each level button carries the best distance reached on it, so the player can
+  // see what they're chasing before they start rather than only afterwards.
+  function refreshLevelBests() {
+    for (const btn of levelButtons.querySelectorAll(".btn-level")) {
+      let tag = btn.querySelector(".level-best");
+      const best = bestFor(records, chosenTopic, btn.dataset.level);
+      if (!best) { if (tag) tag.remove(); continue; }
+      if (!tag) {
+        tag = document.createElement("span");
+        tag.className = "level-best";
+        btn.appendChild(tag);
+      }
+      tag.textContent = COPY.levelBest(best);
+    }
+  }
+
   levelButtons.addEventListener("click", (e) => {
     const btn = e.target.closest(".btn-level");
     if (!btn) return;
@@ -146,6 +166,8 @@ export function initUI({ bank, game }) {
     startGame(); // this click is also the browser's audio-unlock gesture
   });
 
+  // Starting a new run is the ONE thing that discards a suspended one — picking
+  // a topic and a level is an unambiguous "I want a fresh run".
   function startGame() {
     const rows = getLevel(bank, chosenTopic, chosenLevel);
     if (rows.length === 0) return; // bank validator would have warned at boot
@@ -278,9 +300,30 @@ export function initUI({ bank, game }) {
   });
   $("btn-quit").addEventListener("click", () => {
     $("overlay-pause").hidden = true;
-    game.stop();
+    game.suspend();          // put the run down, don't throw it away
     audio.stopMusic();
     show("title");
+  });
+
+  // ---------- resuming a suspended run ----------
+  // The button only exists while there is something to go back to, so the front
+  // screen looks exactly as before on a first visit.
+  function refreshResumeButton() {
+    const btn = $("btn-resume-run");
+    const can = game.isResumable();
+    btn.hidden = !can;
+    if (can) btn.textContent = COPY.btnResumeRun(game.meters());
+    // only one primary button at a time — when there's a run waiting, going
+    // back to it is the main action and starting over is the secondary one
+    $("btn-play").classList.toggle("btn-primary", !can);
+  }
+
+  $("btn-resume-run").addEventListener("click", () => {
+    audio.sfx("click");
+    audio.unlock();          // this click is the browser's audio gesture again
+    show("game");
+    game.resize();
+    game.resumeRun();
   });
 
   // ---------- game over (all black, with stars) ----------
@@ -292,6 +335,26 @@ export function initUI({ bank, game }) {
       lines.push(COPY.statsStreak(s.bestStreak) + (s.bonusLives > 0 ? COPY.statsBonus(s.bonusLives) : ""));
     }
     $("gameover-stats").innerHTML = lines.join("<br/>"); // join, so no trailing <br/> when there's no streak
+
+    // A finished run is the only thing that sets a record — a run you walked
+    // away from doesn't count. Recorded per topic AND level, so an easy level
+    // can't take the credit for a hard one.
+    const result = recordDistance(records, chosenTopic, chosenLevel, meters);
+    const bestLine = $("gameover-best");
+    if (result.isBest) {
+      records = saveRecords(result.records);
+      bestLine.textContent = COPY.newBest(result.meters);
+      bestLine.classList.add("is-best");
+      bestLine.hidden = false;
+      audio.sfx("extralife");            // it should sound like something
+    } else if (result.previous > 0) {
+      bestLine.textContent = COPY.bestSoFar(result.previous);
+      bestLine.classList.remove("is-best");
+      bestLine.hidden = false;
+    } else {
+      bestLine.hidden = true;            // nothing set yet, and this run scored 0
+    }
+
     show("gameover");
   }
 
